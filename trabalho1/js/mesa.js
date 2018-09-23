@@ -225,7 +225,7 @@ function addChairSeat(obj, x, y, z) {
 function addChairTube(obj, x, y, z) {
     'use strict'
 
-    geometry = new THREE.CylinderGeometry(1.5, 1.5, 8, 10);
+    geometry = new THREE.CylinderGeometry(1.5, 1.5, 10, 10);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
@@ -270,13 +270,13 @@ function createChair(x, y, z) {
 
     material = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
 
-    addChairHeadSupport(chair, 0, 6, -7);
-    addChairBackSupport(chair, 0, -4, -8);
-    addChairSeat(chair, 0, -12, 0);
-    addChairTube(chair, 0, -16, 0);
+    addChairHeadSupport(chair, 0, 8, -7);
+    addChairBackSupport(chair, 0, -2, -8);
+    addChairSeat(chair, 0, -10, 0);
+    addChairTube(chair, 0, -14, 0);
     addChairLegs(chair, 0, -20, 0);
 
-    chair.scale.set(1.4, 1.4, 1.4);
+    chair.scale.set(1.6, 1.6, 1.6);
 
     scene.add(chair);
 
@@ -325,16 +325,16 @@ function createCamera() {
     
 
     
-    cameraFront = new THREE.OrthographicCamera( window.innerWidth / - 20, window.innerWidth / 20, window.innerHeight / 20, window.innerHeight / - 20, 1, 1000 );
+    cameraFront = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraFront.position.set(0,50,50);
     // cameraFront.lookAt(new THREE.Vector3(0,50,50));
 
-    cameraSide = new THREE.OrthographicCamera( window.innerWidth / - 20, window.innerWidth / 20, window.innerHeight / 20, window.innerHeight / - 20, 1, 1000 );
+    cameraSide = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraSide.position.set(50,50,0);
     cameraSide.lookAt(0,50,0);
     cameraSide.rotation.y = 90 * Math.PI / 180;
 
-    cameraTop = new THREE.OrthographicCamera( window.innerWidth / - 20, window.innerWidth / 20, window.innerHeight / 20, window.innerHeight / - 20, 1, 1000 );
+    cameraTop = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraTop.position.set(50,50,50);
     cameraTop.lookAt(scene.position);
 
@@ -454,14 +454,14 @@ function animate() {
     
     if(Math.abs(ball.userData.vX) < ball.userData.maxSpeed)
         ball.userData.vX += ball.userData.accX;
-	
-	if(Math.abs(ball.userData.vX) > 0 && ball.userData.accX==0)
+    
+    if(Math.abs(ball.userData.vX) > 0 && ball.userData.accX==0)
         ball.userData.vX =0;
 
     if(Math.abs(ball.userData.vZ) < ball.userData.maxSpeed)
         ball.userData.vZ += ball.userData.accZ;
-	
-	if(Math.abs(ball.userData.vZ) > 0 && ball.userData.accZ==0)
+    
+    if(Math.abs(ball.userData.vZ) > 0 && ball.userData.accZ==0)
         ball.userData.vZ =0;
 
     ball.position.x += ball.userData.vX;
