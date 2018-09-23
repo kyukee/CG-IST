@@ -1,7 +1,8 @@
 var camera, scene, renderer, control, orbit;
 var material, geometry, mesh;
 
-
+//**********************************************************************************************
+//************************************ add your object here ************************************
 function addLampBase(obj, x, y, z) {
     'use strict';
 
@@ -114,13 +115,8 @@ function createLamp(x, y, z) {
     lamp.position.z = z;
 }
 
-
-
-
-
-
-
-
+//************************************ add your object here ************************************
+//************************* remember to use control.attach( object ) ***************************
 
 init();
 render();
@@ -132,8 +128,6 @@ function init() {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
-	//
-
 	camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000 );
 	camera.position.set( 100, 100, 100 );
 	camera.lookAt( 0, 200, 0 );
@@ -141,10 +135,7 @@ function init() {
 	scene = new THREE.Scene();
 	scene.add( new THREE.GridHelper( 1000, 10 ) );
 
-	//var light = new THREE.DirectionalLight( 0xffffff, 2 );
 	var light = new THREE.AmbientLight( 0x404040 , 4);
-	
-	
 	light.position.set( 1, 1, 1 );		
 	scene.add( light );
 	
@@ -159,13 +150,11 @@ function init() {
 		orbit.enabled = !event.value;
 	} );
 
-
-	//************************************ remember to add control.attach( lamp ); ***********
+//*********************************** create your object here ***********************************
 	createLamp(0,37,0);
+	
+
 	scene.add( control );
-
-
-
 
 	window.addEventListener( 'resize', onWindowResize, false );
 
@@ -232,7 +221,6 @@ function init() {
 				control.setTranslationSnap( null );
 				control.setRotationSnap( null );
 				break;
-
 		}
 
 	});
