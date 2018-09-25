@@ -268,7 +268,7 @@ function createChair(x, y, z) {
 
     var chair = new THREE.Object3D();
 
-    material = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
+    material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
 
     addChairHeadSupport(chair, 0, 8, -7);
     addChairBackSupport(chair, 0, -2, -8);
@@ -455,14 +455,28 @@ function animate() {
     if(Math.abs(ball.userData.vX) < ball.userData.maxSpeed)
         ball.userData.vX += ball.userData.accX;
     
-    if(Math.abs(ball.userData.vX) > 0 && ball.userData.accX==0)
-        ball.userData.vX =0;
+    if(Math.abs(ball.userData.vX) > 0 && ball.userData.accX==0){
+
+        if (ball.userData.vX < 0) {
+            ball.userData.vX +=0.01;
+        } else {
+            ball.userData.vX -=0.01;
+        }
+
+    }
 
     if(Math.abs(ball.userData.vZ) < ball.userData.maxSpeed)
         ball.userData.vZ += ball.userData.accZ;
     
-    if(Math.abs(ball.userData.vZ) > 0 && ball.userData.accZ==0)
-        ball.userData.vZ =0;
+    if(Math.abs(ball.userData.vZ) > 0 && ball.userData.accZ==0){
+   
+        if (ball.userData.vZ < 0) {
+            ball.userData.vZ +=0.01;
+        } else {
+            ball.userData.vZ -=0.01;
+        }
+
+    }
 
     ball.position.x += ball.userData.vX;
     ball.position.z += ball.userData.vZ;
