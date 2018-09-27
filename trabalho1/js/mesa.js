@@ -6,7 +6,7 @@ var cameraTop, cameraSide, cameraFront;
 
 var geometry, material, mesh;
 
-var ball;
+var chair;
 
 
 ////////////////////////////////////////////////
@@ -55,27 +55,6 @@ function createTable(x, y, z) {
 
 
 ////////////////////////////////////////////////
-//////               BALL                 //////
-////////////////////////////////////////////////
-
-function createBall(x, y, z) {
-    'use strict';
-    
-    ball = new THREE.Object3D();
-    ball.userData = { vX: 0, vZ: 0, accX: 0, accZ: 0, maxSpeed: 1 };
-
-    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-    geometry = new THREE.SphereGeometry(4, 10, 10);
-    mesh = new THREE.Mesh(geometry, material);
-    
-    ball.add(mesh);
-    ball.position.set(x, y, z);
-    
-    scene.add(ball);
-}
-
-
-////////////////////////////////////////////////
 //////               LAMP                 //////
 ////////////////////////////////////////////////
 
@@ -92,7 +71,7 @@ function addLampPole(obj, x, y, z) {
 function addLampBase(obj, x, y, z) {
     'use strict';
 
-    geometry = new THREE.CylinderGeometry(8, 8, 2, 20);
+    geometry = new THREE.ConeGeometry( 8, 2, 20);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y -1 , z);
     obj.add(mesh);
@@ -177,7 +156,7 @@ function createLamp(x, y, z) {
     material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
 
     addLampPole(lamp, 0, 0, 0);
-    addLampBase(lamp, 0, -35, 0); // FIXME: wireframe nao funciona por causa disto
+    //addLampBase(lamp, 0, -35, 0); // FIXME: wireframe nao funciona por causa disto
     addLampCover(lamp, 0, 35, 0);
     addLampFrame(lamp, 0, 30, 0);
     addLampLightbulb(lamp, 0, 35, 0);
@@ -266,7 +245,9 @@ function addChairLegs(obj, x, y, z) {
 function createChair(x, y, z) {
     'use strict'
 
-    var chair = new THREE.Object3D();
+    chair = new THREE.Object3D();
+
+    chair.userData = { vX: 0, vZ: 0, accX: 0, accZ: 0, maxSpeed: 1 };
 
     material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
 
@@ -304,7 +285,6 @@ function createScene() {
     createTable(0, 37, 0);
     createLamp(40,37,5);
     createChair(0, 37, -10);
-    createBall(10,0,10);
 }
 
 
@@ -327,7 +307,7 @@ function createCamera() {
     
     cameraFront = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraFront.position.set(0,50,50);
-    // cameraFront.lookAt(new THREE.Vector3(0,50,50));
+    cameraFront.lookAt(new THREE.Vector3(0,50,0));
 
     cameraSide = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraSide.position.set(50,50,0);
@@ -335,7 +315,7 @@ function createCamera() {
     cameraSide.rotation.y = 90 * Math.PI / 180;
 
     cameraTop = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
-    cameraTop.position.set(50,50,50);
+    cameraTop.position.set(0,50,0);
     cameraTop.lookAt(scene.position);
 
     camera = cameraTop;
@@ -385,16 +365,16 @@ function onKeyDown(e) {
         camera = cameraTop;
         break;
     case 37: //left arrow
-        ball.userData.accX = -0.01;
+        chair.userData.accX = -0.01;
         break;
     case 38: //up arrow
-        ball.userData.accZ = -0.01;
+        chair.userData.accZ = -0.01;
         break;
     case 39: //right arrow
-        ball.userData.accX = 0.01;
+        chair.userData.accX = 0.01;
         break;
     case 40: //down arrow
-        ball.userData.accZ = 0.01;
+        chair.userData.accZ = 0.01;
         break;
     }
 }
@@ -404,16 +384,16 @@ function onKeyUp(e) {
     
     switch (e.keyCode) {
     case 37: //left arrow
-        ball.userData.accX = 0;
+        chair.userData.accX = 0;
         break;
     case 38: //up arrow
-        ball.userData.accZ = 0;
+        chair.userData.accZ = 0;
         break;
     case 39: //right arrow
-        ball.userData.accX = 0;
+        chair.userData.accX = 0;
         break;
     case 40: //down arrow
-        ball.userData.accZ = 0;
+        chair.userData.accZ = 0;
         break;
     }
 }
@@ -452,34 +432,34 @@ function init() {
 function animate() {
     'use strict';
     
-    if(Math.abs(ball.userData.vX) < ball.userData.maxSpeed)
-        ball.userData.vX += ball.userData.accX;
+    if(Math.abs(chair.userData.vX) < chair.userData.maxSpeed)
+        chair.userData.vX += chair.userData.accX;
     
-    if(Math.abs(ball.userData.vX) > 0 && ball.userData.accX==0){
+    if(Math.abs(chair.userData.vX) > 0 && chair.userData.accX==0){
 
-        if (ball.userData.vX < 0) {
-            ball.userData.vX +=0.01;
+        if (chair.userData.vX < 0) {
+            chair.userData.vX +=0.01;
         } else {
-            ball.userData.vX -=0.01;
+            chair.userData.vX -=0.01;
         }
 
     }
 
-    if(Math.abs(ball.userData.vZ) < ball.userData.maxSpeed)
-        ball.userData.vZ += ball.userData.accZ;
+    if(Math.abs(chair.userData.vZ) < chair.userData.maxSpeed)
+        chair.userData.vZ += chair.userData.accZ;
     
-    if(Math.abs(ball.userData.vZ) > 0 && ball.userData.accZ==0){
+    if(Math.abs(chair.userData.vZ) > 0 && chair.userData.accZ==0){
    
-        if (ball.userData.vZ < 0) {
-            ball.userData.vZ +=0.01;
+        if (chair.userData.vZ < 0) {
+            chair.userData.vZ +=0.01;
         } else {
-            ball.userData.vZ -=0.01;
+            chair.userData.vZ -=0.01;
         }
 
     }
 
-    ball.position.x += ball.userData.vX;
-    ball.position.z += ball.userData.vZ;
+    chair.position.x += chair.userData.vX;
+    chair.position.z += chair.userData.vZ;
 
 
     render();
