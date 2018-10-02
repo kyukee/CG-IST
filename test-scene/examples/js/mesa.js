@@ -5,10 +5,18 @@ var chairTop;
 
 //**********************************************************************************************
 //************************************ add your object here ************************************
+<<<<<<< HEAD
 function addChairHeadSupport(obj, x, y, z) {
     'use strict'
 
     geometry = new THREE.CubeGeometry(10, 4, 3);
+=======
+
+function addChairHeadSupport(obj, x, y, z) {
+    'use strict'
+
+    geometry = new THREE.CubeGeometry(10, 4, 4);
+>>>>>>> f103db6a730e4d9525745b2da1b1171099ac4f66
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);    
@@ -17,7 +25,11 @@ function addChairHeadSupport(obj, x, y, z) {
 function addChairBackSupport(obj, x, y, z) {
     'use strict'
 
+<<<<<<< HEAD
     geometry = new THREE.CubeGeometry(20, 16, 3);
+=======
+    geometry = new THREE.CubeGeometry(20, 16, 4);
+>>>>>>> f103db6a730e4d9525745b2da1b1171099ac4f66
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
@@ -30,6 +42,7 @@ function addChairSeat(obj, x, y, z) {
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
+<<<<<<< HEAD
 
 }
 
@@ -43,17 +56,25 @@ function addChairTop(obj, x, y, z) {
  	addChairSeat(chairTop, 0, -10, 0);
 
     obj.add(chairTop);
+=======
+
+>>>>>>> f103db6a730e4d9525745b2da1b1171099ac4f66
 }
 
 function addChairTube(obj, x, y, z) {
     'use strict'
 
+<<<<<<< HEAD
     geometry = new THREE.CylinderGeometry(1.5, 1.5, 8.5, 10);
+=======
+    geometry = new THREE.CylinderGeometry(1.5, 1.5, 10, 10);
+>>>>>>> f103db6a730e4d9525745b2da1b1171099ac4f66
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
 
+<<<<<<< HEAD
 function addChairLegWheelCenter(obj, x, y, z) {
 	'use strict'
 
@@ -128,6 +149,57 @@ function createChair(x, y, z) {
     chair.scale.set(1.5, 1.5, 1.5);
 
     scene.add(chair);
+=======
+function addChairLegWheel(obj, x, y, z, rotate) {
+    'use strict'
+
+    geometry = new THREE.TorusGeometry(1, 0.5, 3, 12);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    obj.add(mesh);    
+}
+
+function addChairLegs(obj, x, y, z) {
+    'use strict';
+
+    var chairLeg, rotate;
+
+    for(var i = 0; i < 3; i++) {
+        rotate = i * 20;
+        chairLeg = new THREE.Object3D();
+
+        addChairLegWheel(chairLeg, x - 9, y - 2, z, rotate);
+        addChairLegWheel(chairLeg, x + 9, y - 2, z, rotate);
+
+        geometry = new THREE.CubeGeometry(20, 1.5, 1.5);
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(x, y, z);
+        chairLeg.add(mesh);
+
+        chairLeg.rotation.y = rotate;
+
+        obj.add(chairLeg);
+    }
+}
+
+function createChair(x, y, z) {
+    'use strict'
+
+    var chair = new THREE.Object3D();
+
+    material = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
+
+    addChairHeadSupport(chair, 0, 8, -7);
+    addChairBackSupport(chair, 0, -2, -8);
+    addChairSeat(chair, 0, -10, 0);
+    addChairTube(chair, 0, -14, 0);
+    addChairLegs(chair, 0, -20, 0);
+
+    chair.scale.set(1.6, 1.6, 1.6);
+
+    scene.add(chair);
+    control.attach(chair);
+>>>>>>> f103db6a730e4d9525745b2da1b1171099ac4f66
 
     chair.position.x = x;
     chair.position.y = y;
