@@ -1,118 +1,137 @@
 var camera, scene, renderer, control, orbit;
 var material, geometry, mesh;
 
+var chairTop;
+
 //**********************************************************************************************
 //************************************ add your object here ************************************
-function addLampBase(obj, x, y, z) {
-    'use strict';
+function addChairHeadSupport(obj, x, y, z) {
+    'use strict'
 
-    // radiusTop, rdiusBottom, height, radialSegments
-    geometry = new THREE.CylinderGeometry(8, 8, 2, 20);
+    geometry = new THREE.CubeGeometry(10, 4, 3);
     mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y - 1, z);
-    obj.add(mesh);
+    mesh.position.set(x, y, z);
+    obj.add(mesh);    
 }
 
-function addLampPole(obj, x, y, z) {
-    'use strict';
+function addChairBackSupport(obj, x, y, z) {
+    'use strict'
 
-    // radiusTop, rdiusBottom, height, radialSegments
-    geometry = new THREE.CylinderGeometry(1, 1, 70, 12);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y , z);
-    obj.add(mesh);
-}
-
-function addLampCover(obj, x, y, z) {
-    'use strict';
-
-    // radiusTop, rdiusBottom, height, radialSegments
-    geometry = new THREE.CylinderGeometry(8, 12, 12, 16, 6, true);
-
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y , z);
-    obj.add(mesh);
-}
-
-function addLampFrameSupportBottom(obj, x, y, z) {
-    'use strict';
-
-    // radiusTop, rdiusBottom, height, radialSegments
-    geometry = new THREE.CylinderGeometry(2.5, 2.5, 1, 12);
-
+    geometry = new THREE.CubeGeometry(20, 16, 3);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
 
-function addLampFrameSupportTop(obj, x, y, z) {
-    'use strict';
+function addChairSeat(obj, x, y, z) {
+    'use strict'
 
-    // radiusTop, rdiusBottom, height, radialSegments
-    geometry = new THREE.TorusGeometry(7.5, .5, 14, 50);
-
+    geometry = new THREE.CubeGeometry(20, 1.5, 20);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
-
-    mesh.rotation.x = Math.PI / 2;
-
     obj.add(mesh);
+
 }
 
-function addLampFrameBar(obj, x, y, z) {
-    'use strict';
+function addChairTop(obj, x, y, z) {
+	'use strict'
 
-    geometry = new THREE.BoxGeometry(.5, 12, .5);
+	chairTop = new THREE.Object3D();
 
+	addChairHeadSupport(chairTop, 0, 8.5, -8.5);
+    addChairBackSupport(chairTop, 0, -1.5, -8.5);
+ 	addChairSeat(chairTop, 0, -10, 0);
+
+    obj.add(chairTop);
+}
+
+function addChairTube(obj, x, y, z) {
+    'use strict'
+
+    geometry = new THREE.CylinderGeometry(1.5, 1.5, 8.5, 10);
     mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y + 5.6, z);
-
-    mesh.rotation.x = Math.PI / 8 * Math.sign(z);
-    mesh.rotation.z = Math.PI / 8 * -Math.sign(x) ;
-    
+    mesh.position.set(x, y, z);
     obj.add(mesh);
 }
 
-function addLampFrame(obj, x, y, z) {
-    'use strict';
+function addChairLegWheelCenter(obj, x, y, z) {
+	'use strict'
 
-    addLampFrameSupportBottom(obj, x, y, z);
-    addLampFrameSupportTop(obj, x, y + 11, z);
-    addLampFrameBar(obj, x-3.4, y, z-3.4);
-    addLampFrameBar(obj, x-3.4, y, z+3.4);
-    addLampFrameBar(obj, x+3.4, y, z-3.4);
-    addLampFrameBar(obj, x+3.4, y, z+3.4);
+	var geometry = new THREE.CylinderGeometry(1, 1, 1, 12);
+
+	//help distinguish legs components
+	material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
+
+	var mesh = new THREE.Mesh(geometry, material);
+	mesh.position.set(x, y, z);
+	mesh.rotation.x = Math.PI / 2;
+	obj.add(mesh);
 }
 
-function addLampLightbulb(obj, x, y, z) {
-    'use strict';
+function addChairLegWheel(obj, x, y, z) {
+    'use strict'
 
-    geometry = new THREE.SphereGeometry(2, 15, 15);
+    var chairLegWheel = new THREE.Object3D();
 
+    addChairLegWheelCenter(chairLegWheel, x, y, z);
+
+    //help distinguish legs components
+	material = new THREE.MeshBasicMaterial({color: 0x0000ff, wireframe: true});
+
+    geometry = new THREE.TorusGeometry(1.5, 0.5, 5, 10);
     mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y + 1.8, z);
-    obj.add(mesh);
+    mesh.position.set(x, y, z);
+    chairLegWheel.add(mesh);
+    obj.add(chairLegWheel);    
 }
 
-function createLamp(x, y, z) {
+function addChairLegs(obj, x, y, z) {
     'use strict';
-    
-    var lamp = new THREE.Object3D();
-    
-    material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
 
-	addLampPole(lamp, 0, 0, 0);
-    addLampBase(lamp, 0, -35, 0);
-	addLampCover(lamp, 0, 35, 0);
-	addLampFrame(lamp, 0, 30, 0);
-	addLampLightbulb(lamp, 0, 35, 0);
+    var chairLeg, rotate;
 
-    scene.add(lamp);
-    control.attach( lamp );
-    
-    lamp.position.x = x;
-    lamp.position.y = y;
-    lamp.position.z = z;
+    for(var i = 1; i < 4; i++) {
+        rotate = (Math.PI / 3) * i;
+        chairLeg = new THREE.Object3D();
+
+        addChairLegWheel(chairLeg, x - 9, y - 3, z);
+        addChairLegWheel(chairLeg, x + 9, y - 3, z);
+
+        //help distinguish legs components
+		material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
+
+        geometry = new THREE.CubeGeometry(20, 1.5, 1.5);
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(x, y, z);
+        chairLeg.add(mesh);
+
+        chairLeg.rotation.y = rotate;
+
+        obj.add(chairLeg);
+    }
+}
+
+function createChair(x, y, z) {
+    'use strict'
+
+    var chair = new THREE.Object3D();
+
+    material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
+
+    addChairTop(chair, 0, 4, -8);
+    // addChairHeadSupport(chair, 0, 8.5, -8);
+    // addChairBackSupport(chair, 0, -1.5, -8);
+    // addChairSeat(chair, 0, -10, 0);
+    addChairTube(chair, 0, -15, 0);
+    addChairLegs(chair, 0, -20, 0);
+
+    chair.scale.set(1.5, 1.5, 1.5);
+
+    scene.add(chair);
+
+    chair.position.x = x;
+    chair.position.y = y;
+    chair.position.z = z;
 }
 
 //************************************ add your object here ************************************
@@ -134,6 +153,7 @@ function init() {
 
 	scene = new THREE.Scene();
 	scene.add( new THREE.GridHelper( 1000, 10 ) );
+	scene.add(new THREE.AxisHelper(100));
 
 	var light = new THREE.AmbientLight( 0x404040 , 4);
 	light.position.set( 1, 1, 1 );		
@@ -151,7 +171,7 @@ function init() {
 	} );
 
 //*********************************** create your object here ***********************************
-	createLamp(0,37,0);
+	createChair(0,37,0);
 	
 
 	scene.add( control );
