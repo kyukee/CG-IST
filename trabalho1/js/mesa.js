@@ -6,11 +6,9 @@ var cameraTop, cameraSide, cameraFront;
 
 var geometry, material, mesh;
 
-var chair;
+var chair, chairTop;
 
 var clock;
-
-var chairTop;
 
 
 ////////////////////////////////////////////////
@@ -199,7 +197,7 @@ function addChairBackSupport(obj, x, y, z) {
 function addChairSeat(obj, x, y, z) {
     'use strict'
 
-    geometry = new THREE.CubeGeometry(20, 1.5, 20);
+    geometry = new THREE.CubeGeometry(20, 2, 20);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
@@ -211,9 +209,9 @@ function addChairTop(obj, x, y, z) {
 
     chairTop = new THREE.Object3D();
 
-    addChairHeadSupport(chairTop, 0, 8.5, -8.5);
-    addChairBackSupport(chairTop, 0, -1.5, -8.5);
-    addChairSeat(chairTop, 0, -10, 0);
+    addChairHeadSupport(chairTop, 0, 9.5, -8.5);
+    addChairBackSupport(chairTop, 0, -0.5, -8.5);
+    addChairSeat(chairTop, 0, -9.5, 0);
 
     obj.add(chairTop);
 }
@@ -230,7 +228,7 @@ function addChairTube(obj, x, y, z) {
 function addChairLegWheelCenter(obj, x, y, z) {
     'use strict'
 
-    var geometry = new THREE.CylinderGeometry(1, 1, 1, 12);
+    var geometry = new THREE.CylinderGeometry(1, 1, 1, 10);
 
     //help distinguish legs components
     // material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
@@ -263,15 +261,15 @@ function addChairLegs(obj, x, y, z) {
 
     var chairLeg, rotate;
 
-    for(var i = 1; i < 4; i++) {
-        rotate = (Math.PI / 3) * i;
+    for(var i = 0; i < 3; i++) {
+        rotate = i * 20;
         chairLeg = new THREE.Object3D();
 
         addChairLegWheel(chairLeg, x - 9, y - 3, z);
         addChairLegWheel(chairLeg, x + 9, y - 3, z);
 
         //help distinguish legs components
-        material = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
+        // material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
 
         geometry = new THREE.CubeGeometry(20, 1.5, 1.5);
         mesh = new THREE.Mesh(geometry, material);
@@ -287,7 +285,9 @@ function addChairLegs(obj, x, y, z) {
 function createChair(x, y, z) {
     'use strict'
 
-    var chair = new THREE.Object3D();
+    chair = new THREE.Object3D();
+
+    chair.userData = { vX: 0, vZ: 0, accX: 0, accZ: 0, maxSpeed: 20 };
 
     material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
 
@@ -306,7 +306,6 @@ function createChair(x, y, z) {
     chair.position.y = y;
     chair.position.z = z;
 }
-
 
 ////////////////////////////////////////////////
 //////               SCENE                //////
@@ -530,8 +529,8 @@ function animate() {
 
     }
 
-    chair.position.x += chair.userData.vX * timeElapsed;
-    chair.position.z += chair.userData.vZ * timeElapsed;
+    chair.position.x += (chair.userData.vX * timeElapsed) * 15;
+    chair.position.z += (chair.userData.vZ * timeElapsed) * 15;
 
 
     render();
@@ -540,4 +539,3 @@ function animate() {
 
     // controls.update();
 }
-
