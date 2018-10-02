@@ -8,6 +8,8 @@ var geometry, material, mesh;
 
 var chair;
 
+var clock;
+
 
 ////////////////////////////////////////////////
 //////              TABLE                 //////
@@ -71,7 +73,8 @@ function addLampPole(obj, x, y, z) {
 function addLampBase(obj, x, y, z) {
     'use strict';
 
-    geometry = new THREE.ConeGeometry( 8, 2, 20);
+    geometry = new THREE.CylinderGeometry(8, 8, 2, 20);
+    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y -1 , z);
     obj.add(mesh);
@@ -156,7 +159,7 @@ function createLamp(x, y, z) {
     material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
 
     addLampPole(lamp, 0, 0, 0);
-    //addLampBase(lamp, 0, -35, 0); // FIXME: wireframe nao funciona por causa disto
+    addLampBase(lamp, 0, -35, 0); // FIXME: wireframe nao funciona por causa disto
     addLampCover(lamp, 0, 35, 0);
     addLampFrame(lamp, 0, 30, 0);
     addLampLightbulb(lamp, 0, 35, 0);
@@ -272,7 +275,7 @@ function createChair(x, y, z) {
 
     chair = new THREE.Object3D();
 
-    chair.userData = { vX: 0, vZ: 0, accX: 0, accZ: 0, maxSpeed: 1 };
+    chair.userData = { vX: 0, vZ: 0, accX: 0, accZ: 0, maxSpeed: 20 };
 
     material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
 
@@ -389,16 +392,16 @@ function onKeyDown(e) {
         camera = cameraTop;
         break;
     case 37: //left arrow
-        chair.userData.accX = -0.01;
+        chair.userData.accX = -10;
         break;
     case 38: //up arrow
-        chair.userData.accZ = -0.01;
+        chair.userData.accZ = -10;
         break;
     case 39: //right arrow
-        chair.userData.accX = 0.01;
+        chair.userData.accX = 10;
         break;
     case 40: //down arrow
-        chair.userData.accZ = 0.01;
+        chair.userData.accZ = 10;
         break;
     }
 }
@@ -438,6 +441,11 @@ function init() {
     createScene();
     createCamera();
 
+
+    clock = new THREE.Clock(true);
+
+    
+
     // controls = new THREE.OrbitControls( camera, renderer.domElement );  
     // controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
     // controls.dampingFactor = 0.25;
@@ -456,34 +464,60 @@ function init() {
 function animate() {
     'use strict';
     
-    if(Math.abs(chair.userData.vX) < chair.userData.maxSpeed)
-        chair.userData.vX += chair.userData.accX;
     
-    if(Math.abs(chair.userData.vX) > 0 && chair.userData.accX==0){
+    var timeElapsed = clock.getDelta();
+
+    var attrition = 0.1;
+
+
+    if(Math.abs(chair.userData.vX) < chair.userData.maxSpeed)
+        chair.userData.vX += chair.userData.accX * timeElapsed / 2;
+    
+    if(Math.abs(chair.userData.vX) > 0 && chair.userData.accX == 0){
 
         if (chair.userData.vX < 0) {
-            chair.userData.vX +=0.01;
+            chair.userData.vX += attrition;
+
+            if (chair.userData.vX > 0){
+                chair.userData.vX = 0;
+            }
+
+
         } else {
-            chair.userData.vX -=0.01;
+            chair.userData.vX -= attrition;
+
+            if (chair.userData.vX < 0){
+                chair.userData.vX = 0;
+            }
         }
 
     }
 
     if(Math.abs(chair.userData.vZ) < chair.userData.maxSpeed)
-        chair.userData.vZ += chair.userData.accZ;
+        chair.userData.vZ += chair.userData.accZ * timeElapsed / 2;
     
-    if(Math.abs(chair.userData.vZ) > 0 && chair.userData.accZ==0){
-   
+    if(Math.abs(chair.userData.vZ) > 0 && chair.userData.accZ == 0){
+
         if (chair.userData.vZ < 0) {
-            chair.userData.vZ +=0.01;
+            chair.userData.vZ += attrition;
+
+            if (chair.userData.vZ > 0){
+                chair.userData.vZ = 0;
+            }
+
+
         } else {
-            chair.userData.vZ -=0.01;
+            chair.userData.vZ -= attrition;
+
+            if (chair.userData.vZ < 0){
+                chair.userData.vZ = 0;
+            }
         }
 
     }
 
-    chair.position.x += chair.userData.vX;
-    chair.position.z += chair.userData.vZ;
+    chair.position.x += chair.userData.vX * timeElapsed;
+    chair.position.z += chair.userData.vZ * timeElapsed;
 
 
     render();
