@@ -1,6 +1,6 @@
 /*global THREE, requestAnimationFrame, console*/
 
-var camera, scene, renderer, controls;
+var camera, scene, renderer;
 
 var cameraTop, cameraSide, cameraFront;
 
@@ -261,8 +261,8 @@ function addChairLegs(obj, x, y, z) {
 
     var chairLeg, rotate;
 
-    for(var i = 0; i < 3; i++) {
-        rotate = i * 20;
+    for(var rotation = (Math.PI / 3); rotation <= Math.PI; rotation += (Math.PI / 3)) {
+
         chairLeg = new THREE.Object3D();
 
         addChairLegWheel(chairLeg, x - 9, y - 3, z);
@@ -276,7 +276,7 @@ function addChairLegs(obj, x, y, z) {
         mesh.position.set(x, y, z);
         chairLeg.add(mesh);
 
-        chairLeg.rotation.y = rotate;
+        chairLeg.rotation.y = rotation;
 
         obj.add(chairLeg);
     }
@@ -287,7 +287,7 @@ function createChair(x, y, z) {
 
     chair = new THREE.Object3D();
 
-    chair.userData = { vX: 0, vZ: 0, accX: 0, accZ: 0, maxSpeed: 20 };
+    chair.userData = { vFront: 0, vBack: 0, accFront: 0, accBack: 0, accelaration: 20, maxSpeed: 30 };
 
     material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
 
@@ -334,33 +334,21 @@ function createScene() {
 
 function createCamera() {
     'use strict';
-    //camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,  1,    1000);
-
-    // camera = new THREE.OrthographicCamera( window.innerWidth / - 20, window.innerWidth / 20, window.innerHeight / 20, window.innerHeight / - 20, 1, 1000 );
-
-    // camera.position.x = 50;
-    // camera.position.y = 50;
-    // camera.position.z = 50;
-    //camera.lookAt(scene.position);
-    
-
     
     cameraFront = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraFront.position.set(0,50,50);
     cameraFront.lookAt(new THREE.Vector3(0,50,0));
+
+    cameraTop = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
+    cameraTop.position.set(0,50,0);
+    cameraTop.lookAt(scene.position);
 
     cameraSide = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraSide.position.set(50,50,0);
     cameraSide.lookAt(0,50,0);
     cameraSide.rotation.y = 90 * Math.PI / 180;
 
-    cameraTop = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
-    cameraTop.position.set(0,50,0);
-    cameraTop.lookAt(scene.position);
-
     camera = cameraTop;
-
-
 }
 
 function onResize() {
@@ -372,7 +360,6 @@ function onResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
     }
-
 }
 
 function onKeyDown(e) {
@@ -405,16 +392,16 @@ function onKeyDown(e) {
         camera = cameraTop;
         break;
     case 37: //left arrow
-        chair.userData.accX = -10;
+        chairTop.rotation.y += Math.PI / 60;
         break;
     case 38: //up arrow
-        chair.userData.accZ = -10;
+        chair.userData.accFront = chair.userData.accelaration;
         break;
     case 39: //right arrow
-        chair.userData.accX = 10;
+        chairTop.rotation.y -= Math.PI / 60;
         break;
     case 40: //down arrow
-        chair.userData.accZ = 10;
+        chair.userData.accBack = chair.userData.accelaration;
         break;
     }
 }
@@ -424,16 +411,16 @@ function onKeyUp(e) {
     
     switch (e.keyCode) {
     case 37: //left arrow
-        chair.userData.accX = 0;
+        // chair.userData.accX = 0;
         break;
     case 38: //up arrow
-        chair.userData.accZ = 0;
+        chair.userData.accFront = 0;
         break;
     case 39: //right arrow
-        chair.userData.accX = 0;
+        // chair.userData.accX = 0;
         break;
     case 40: //down arrow
-        chair.userData.accZ = 0;
+        chair.userData.accBack = 0;
         break;
     }
 }
@@ -457,16 +444,6 @@ function init() {
 
     clock = new THREE.Clock(true);
 
-    
-
-    // controls = new THREE.OrbitControls( camera, renderer.domElement );  
-    // controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-    // controls.dampingFactor = 0.25;
-    // controls.screenSpacePanning = false;
-    // controls.minDistance = 100;
-    // controls.maxDistance = 500;
-    // controls.maxPolarAngle = Math.PI / 2;
-
     render();
     
     window.addEventListener("keydown", onKeyDown);
@@ -477,65 +454,66 @@ function init() {
 function animate() {
     'use strict';
     
-    
     var timeElapsed = clock.getDelta();
 
-    var attrition = 0.1;
+    var attrition = 0.4;
 
-
-    if(Math.abs(chair.userData.vX) < chair.userData.maxSpeed)
-        chair.userData.vX += chair.userData.accX * timeElapsed / 2;
+    if(Math.abs(chair.userData.vFront) < chair.userData.maxSpeed)
+        chair.userData.vFront += chair.userData.accFront * timeElapsed / 2;
     
-    if(Math.abs(chair.userData.vX) > 0 && chair.userData.accX == 0){
+    if(Math.abs(chair.userData.vFront) > 0 && chair.userData.accFront == 0){
 
-        if (chair.userData.vX < 0) {
-            chair.userData.vX += attrition;
+        if (chair.userData.vFront < 0) {
+            chair.userData.vFront += attrition;
 
-            if (chair.userData.vX > 0){
-                chair.userData.vX = 0;
+            if (chair.userData.vFront > 0){
+                chair.userData.vFront = 0;
             }
 
 
         } else {
-            chair.userData.vX -= attrition;
+            chair.userData.vFront -= attrition;
 
-            if (chair.userData.vX < 0){
-                chair.userData.vX = 0;
+            if (chair.userData.vFront < 0){
+                chair.userData.vFront = 0;
             }
         }
 
     }
 
-    if(Math.abs(chair.userData.vZ) < chair.userData.maxSpeed)
-        chair.userData.vZ += chair.userData.accZ * timeElapsed / 2;
+    if(Math.abs(chair.userData.vBack) < chair.userData.maxSpeed)
+        chair.userData.vBack += chair.userData.accBack * timeElapsed / 2;
     
-    if(Math.abs(chair.userData.vZ) > 0 && chair.userData.accZ == 0){
+    if(Math.abs(chair.userData.vBack) > 0 && chair.userData.accBack == 0){
 
-        if (chair.userData.vZ < 0) {
-            chair.userData.vZ += attrition;
+        if (chair.userData.vBack < 0) {
+            chair.userData.vBack += attrition;
 
-            if (chair.userData.vZ > 0){
-                chair.userData.vZ = 0;
+            if (chair.userData.vBack > 0){
+                chair.userData.vBack = 0;
             }
 
 
         } else {
-            chair.userData.vZ -= attrition;
+            chair.userData.vBack -= attrition;
 
-            if (chair.userData.vZ < 0){
-                chair.userData.vZ = 0;
+            if (chair.userData.vBack < 0){
+                chair.userData.vBack = 0;
             }
         }
 
     }
 
-    chair.position.x += (chair.userData.vX * timeElapsed) * 15;
-    chair.position.z += (chair.userData.vZ * timeElapsed) * 15;
+    var frontMovement = (chair.userData.vFront * timeElapsed);
+    var backMovement = (chair.userData.vBack * timeElapsed);
 
+    chair.position.z += frontMovement * Math.cos(chairTop.rotation.y);
+    chair.position.z -= backMovement * Math.cos(chairTop.rotation.y);
+
+    chair.position.x += frontMovement * Math.sin(chairTop.rotation.y);
+    chair.position.x -= backMovement * Math.sin(chairTop.rotation.y);
 
     render();
     
     requestAnimationFrame(animate);
-
-    // controls.update();
 }
