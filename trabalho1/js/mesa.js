@@ -15,16 +15,6 @@ var clock;
 //////              TABLE                 //////
 ////////////////////////////////////////////////
 
-function addTableLegRound(obj, x, y, z) {
-    'use strict';
-
-    // radiusTop, rdiusBottom, height, radialSegments
-    geometry = new THREE.CylinderGeometry(1, 1, 36, 10);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y - 18, z);
-    obj.add(mesh);
-}
-
 function addTableTop(obj, x, y, z) {
     'use strict';
 
@@ -35,18 +25,29 @@ function addTableTop(obj, x, y, z) {
     obj.add(mesh);
 }
 
+function addTableLegRound(obj, x, y, z) {
+    'use strict';
+
+    // radiusTop, rdiusBottom, height, radialSegments
+    geometry = new THREE.CylinderGeometry(1, 1, 36, 10);
+    mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0x393536, wireframe: true }));
+    mesh.position.set(x, y - 18, z);
+    obj.add(mesh);
+}
+
 function createTable(x, y, z) {
     'use strict';
     
     var table = new THREE.Object3D();
     
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-   
+    material = new THREE.MeshBasicMaterial({ color: 0xbd8e61, wireframe: true });
     addTableTop(table, 0, 0, 0);
-    addTableLegRound(table, -22, -1, -12);
-    addTableLegRound(table, -22, -1, 12);
-    addTableLegRound(table, 22, -1, 12);
-    addTableLegRound(table, 22, -1, -12);
+
+    material = new THREE.MeshBasicMaterial({ color: 0x393536, wireframe: true });
+    addTableLegRound(table, -22, -0.5, -12);
+    addTableLegRound(table, -22, -0.5, 12);
+    addTableLegRound(table, 22, -0.5, 12);
+    addTableLegRound(table, 22, -0.5, -12);
     
     scene.add(table);
     
@@ -74,7 +75,7 @@ function addLampBase(obj, x, y, z) {
     'use strict';
 
     geometry = new THREE.CylinderGeometry(8, 8, 2, 20);
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    // material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y -1 , z);
     obj.add(mesh);
@@ -156,13 +157,15 @@ function createLamp(x, y, z) {
     
     var lamp = new THREE.Object3D();
     
-    material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
+    material = new THREE.MeshBasicMaterial({ color: 0x634d2e, wireframe: true });
 
     addLampPole(lamp, 0, 0, 0);
-    addLampBase(lamp, 0, -35, 0); // FIXME: wireframe nao funciona por causa disto
-    addLampCover(lamp, 0, 35, 0);
+    addLampBase(lamp, 0, -35, 0);
     addLampFrame(lamp, 0, 30, 0);
     addLampLightbulb(lamp, 0, 35, 0);
+
+    material = new THREE.MeshBasicMaterial({ color: 0xefb892, wireframe: true });
+    addLampCover(lamp, 0, 35, 0);
 
     scene.add(lamp);
     
@@ -289,13 +292,13 @@ function createChair(x, y, z) {
 
     chair.userData = { vFront: 0, vBack: 0, accFront: 0, accBack: 0, accelaration: 20, maxSpeed: 30 };
 
-    material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
-
+    material = new THREE.MeshBasicMaterial({color: 0x4d586a, wireframe: true});
     addChairTop(chair, 0, 4, -8);
-    // addChairHeadSupport(chair, 0, 8.5, -8);
-    // addChairBackSupport(chair, 0, -1.5, -8);
-    // addChairSeat(chair, 0, -10, 0);
+
+    material = new THREE.MeshBasicMaterial({color: 0x838385, wireframe: true});
     addChairTube(chair, 0, -15, 0);
+
+    material = new THREE.MeshBasicMaterial({color: 0x212224, wireframe: true});
     addChairLegs(chair, 0, -20, 0);
 
     chair.scale.set(1.5, 1.5, 1.5);
@@ -322,7 +325,7 @@ function createScene() {
 
     scene.add(new THREE.AxisHelper(10));
     
-    createTable(0, 37, 0);
+    createTable(0, 36.5, 0);
     createLamp(40,37,5);
     createChair(0, 37, -10);
 }
