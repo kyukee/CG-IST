@@ -10,6 +10,8 @@ var chair, chairTop;
 
 var clock;
 
+var leftArrowPressed = false, rightArrowPressed = false;
+
 
 ////////////////////////////////////////////////
 //////              TABLE                 //////
@@ -348,8 +350,7 @@ function createCamera() {
 
     cameraSide = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraSide.position.set(50,50,0);
-    cameraSide.lookAt(0,50,0);
-    cameraSide.rotation.y = 90 * Math.PI / 180;
+    cameraSide.lookAt(new THREE.Vector3(0,50,0));
 
     camera = cameraTop;
 }
@@ -395,13 +396,40 @@ function onKeyDown(e) {
         camera = cameraTop;
         break;
     case 37: //left arrow
-        chairTop.rotation.y += Math.PI / 60;
+
+
+        /* 
+
+        Exemplo: 
+        
+        1. carregar em leftArrow a cadeira roda para a nossa esquerda.
+        2. sem largar a leftArrow carregamos na right Arrow e ela para de rodar. 
+        3. largando a leftArrow ela começa a rodar para a nossa direita. 
+
+        Agora repitam o ponto 1. e 2. e no 3. larguem a rightArrow --> ela deveria retomar a rotaçao para a nossa esquerda
+        mas em vez disso fica parada. Já perdi algum tempo a pensar nisto e não entendo o porque de nao funcionar corretamente.
+
+        pode ser que algo me esteja a escapar neste momento e algum de voces se aperceba. 
+        */
+        
+
+        leftArrowPressed = true;
+        
+
+        if(rightArrowPressed == false)
+            chairTop.rotation.y += Math.PI / 60;
+
         break;
     case 38: //up arrow
         chair.userData.accFront = chair.userData.accelaration;
         break;
     case 39: //right arrow
-        chairTop.rotation.y -= Math.PI / 60;
+
+        rightArrowPressed = true;
+
+        if(leftArrowPressed == false)
+            chairTop.rotation.y -= Math.PI / 60;
+
         break;
     case 40: //down arrow
         chair.userData.accBack = chair.userData.accelaration;
@@ -414,13 +442,13 @@ function onKeyUp(e) {
     
     switch (e.keyCode) {
     case 37: //left arrow
-        // chair.userData.accX = 0;
+        leftArrowPressed = false;
         break;
     case 38: //up arrow
         chair.userData.accFront = 0;
         break;
     case 39: //right arrow
-        // chair.userData.accX = 0;
+        rightArrowPressed = false;
         break;
     case 40: //down arrow
         chair.userData.accBack = 0;
