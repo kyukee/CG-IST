@@ -10,8 +10,6 @@ var chair, chairTop;
 
 var clock;
 
-var leftArrowPressed = false, rightArrowPressed = false;
-
 
 ////////////////////////////////////////////////
 //////              TABLE                 //////
@@ -292,7 +290,7 @@ function createChair(x, y, z) {
 
     chair = new THREE.Object3D();
 
-    chair.userData = { vFront: 0, vBack: 0, accFront: 0, accBack: 0, accelaration: 20, maxSpeed: 30 };
+    chair.userData = { vFront: 0, vBack: 0, accFront: 0, accBack: 0, accelaration: 20, maxSpeed: 30 , rotateLeft: false, rotateRight: false};
 
     material = new THREE.MeshBasicMaterial({color: 0x4d586a, wireframe: true});
     addChairTop(chair, 0, 4, -8);
@@ -396,40 +394,13 @@ function onKeyDown(e) {
         camera = cameraTop;
         break;
     case 37: //left arrow
-
-
-        /* 
-
-        Exemplo: 
-        
-        1. carregar em leftArrow a cadeira roda para a nossa esquerda.
-        2. sem largar a leftArrow carregamos na right Arrow e ela para de rodar. 
-        3. largando a leftArrow ela começa a rodar para a nossa direita. 
-
-        Agora repitam o ponto 1. e 2. e no 3. larguem a rightArrow --> ela deveria retomar a rotaçao para a nossa esquerda
-        mas em vez disso fica parada. Já perdi algum tempo a pensar nisto e não entendo o porque de nao funcionar corretamente.
-
-        pode ser que algo me esteja a escapar neste momento e algum de voces se aperceba. 
-        */
-        
-
-        leftArrowPressed = true;
-        
-
-        if(rightArrowPressed == false)
-            chairTop.rotation.y += Math.PI / 60;
-
+        chair.userData.rotateLeft = true;
         break;
     case 38: //up arrow
         chair.userData.accFront = chair.userData.accelaration;
         break;
     case 39: //right arrow
-
-        rightArrowPressed = true;
-
-        if(leftArrowPressed == false)
-            chairTop.rotation.y -= Math.PI / 60;
-
+        chair.userData.rotateRight = true;
         break;
     case 40: //down arrow
         chair.userData.accBack = chair.userData.accelaration;
@@ -442,13 +413,13 @@ function onKeyUp(e) {
     
     switch (e.keyCode) {
     case 37: //left arrow
-        leftArrowPressed = false;
+        chair.userData.rotateLeft = false;
         break;
     case 38: //up arrow
         chair.userData.accFront = 0;
         break;
     case 39: //right arrow
-        rightArrowPressed = false;
+        chair.userData.rotateRight = false;
         break;
     case 40: //down arrow
         chair.userData.accBack = 0;
@@ -484,6 +455,18 @@ function init() {
 
 function animate() {
     'use strict';
+	
+	
+	if(chair.userData.rotateLeft == true && chair.userData.rotateRight == false)
+		chairTop.rotation.y += Math.PI / 60;
+	
+	if(chair.userData.rotateRight == true && chair.userData.rotateLeft == false)
+		chairTop.rotation.y -= Math.PI / 60;
+	
+	
+	
+	
+	
     
     var timeElapsed = clock.getDelta();
 
