@@ -222,7 +222,7 @@ function addChairTop(obj, x, y, z) {
 function addChairTube(obj, x, y, z) {
     'use strict'
 
-    geometry = new THREE.CylinderGeometry(1.5, 1.5, 8.5, 10);
+    geometry = new THREE.CylinderGeometry(1.5, 1.5, 8.6, 10);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
@@ -268,13 +268,13 @@ function addChairLegs(obj, x, y, z) {
 
         chairLeg = new THREE.Object3D();
 
-        addChairLegWheel(chairLeg, x - 9, y - 3, z);
-        addChairLegWheel(chairLeg, x + 9, y - 3, z);
+        addChairLegWheel(chairLeg, x - 9, y - 2.75, z);
+        addChairLegWheel(chairLeg, x + 9, y - 2.75, z);
 
         //help distinguish legs components
         // material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
 
-        geometry = new THREE.CubeGeometry(20, 1.5, 1.5);
+        geometry = new THREE.CubeGeometry(20, 1.75, 1.5);
         mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(x, y, z);
         chairLeg.add(mesh);
@@ -296,7 +296,7 @@ function createChair(x, y, z) {
     addChairTop(chair, 0, 4, -8);
 
     material = new THREE.MeshBasicMaterial({color: 0x838385, wireframe: true});
-    addChairTube(chair, 0, -15, 0);
+    addChairTube(chair, 0, -14.8, 0);
 
     material = new THREE.MeshBasicMaterial({color: 0x212224, wireframe: true});
     addChairLegs(chair, 0, -20, 0);
