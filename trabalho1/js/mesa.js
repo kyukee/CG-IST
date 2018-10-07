@@ -359,7 +359,7 @@ function onResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     
     if (window.innerHeight > 0 && window.innerWidth > 0) {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = renderer.getSize().width / renderer.getSize().height;
         camera.updateProjectionMatrix();
     }
 }
@@ -454,19 +454,14 @@ function init() {
 }
 
 function animate() {
-    'use strict';
-	
+    'use strict';	
 	
 	if(chair.userData.rotateLeft == true && chair.userData.rotateRight == false)
 		chairTop.rotation.y += Math.PI / 60;
 	
 	if(chair.userData.rotateRight == true && chair.userData.rotateLeft == false)
 		chairTop.rotation.y -= Math.PI / 60;
-	
-	
-	
-	
-	
+		
     
     var timeElapsed = clock.getDelta();
 
@@ -476,22 +471,12 @@ function animate() {
         chair.userData.vFront += chair.userData.accFront * timeElapsed / 2;
     
     if(Math.abs(chair.userData.vFront) > 0 && chair.userData.accFront == 0){
+        
+        chair.userData.vFront -= attrition;
 
-        if (chair.userData.vFront < 0) {
-            chair.userData.vFront += attrition;
-
-            if (chair.userData.vFront > 0){
-                chair.userData.vFront = 0;
-            }
-
-
-        } else {
-            chair.userData.vFront -= attrition;
-
-            if (chair.userData.vFront < 0){
-                chair.userData.vFront = 0;
-            }
-        }
+        if (chair.userData.vFront < 0){
+            chair.userData.vFront = 0;
+        }        
 
     }
 
@@ -500,20 +485,10 @@ function animate() {
     
     if(Math.abs(chair.userData.vBack) > 0 && chair.userData.accBack == 0){
 
-        if (chair.userData.vBack < 0) {
-            chair.userData.vBack += attrition;
+        chair.userData.vBack -= attrition;
 
-            if (chair.userData.vBack > 0){
-                chair.userData.vBack = 0;
-            }
-
-
-        } else {
-            chair.userData.vBack -= attrition;
-
-            if (chair.userData.vBack < 0){
-                chair.userData.vBack = 0;
-            }
+        if (chair.userData.vBack < 0){
+            chair.userData.vBack = 0;
         }
 
     }
