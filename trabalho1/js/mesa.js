@@ -8,6 +8,8 @@ var geometry, material, mesh;
 
 var chair, chairTop;
 
+var chairWheels = [];
+
 var clock;
 
 
@@ -253,10 +255,16 @@ function addChairLegWheel(obj, x, y, z) {
     // material = new THREE.MeshBasicMaterial({color: 0x0000ff, wireframe: true});
 
     geometry = new THREE.TorusGeometry(1.5, 0.5, 5, 10);
+
+    // geometry.translate( distX, distY, distZ );
+
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     chairLegWheel.add(mesh);
-    obj.add(chairLegWheel);    
+    obj.add(chairLegWheel); 
+
+    chairWheels.push(mesh);   
+
 }
 
 function addChairLegs(obj, x, y, z) {
@@ -338,15 +346,17 @@ function createScene() {
 function createCamera() {
     'use strict';
     
-    cameraFront = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
+    var camFactor = 14;
+
+    cameraFront = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
     cameraFront.position.set(0,50,50);
     cameraFront.lookAt(new THREE.Vector3(0,50,0));
 
-    cameraTop = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
+    cameraTop = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
     cameraTop.position.set(0,50,0);
     cameraTop.lookAt(scene.position);
 
-    cameraSide = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
+    cameraSide = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
     cameraSide.position.set(50,50,0);
     cameraSide.lookAt(new THREE.Vector3(0,50,0));
 
@@ -356,13 +366,46 @@ function createCamera() {
 function onResize() {
     'use strict';
 
+    var camFactor = 14;
+
+
+
+
+    // notify the renderer of the size change
     renderer.setSize(window.innerWidth, window.innerHeight);
-    
-    if (window.innerHeight > 0 && window.innerWidth > 0) {
-        camera.aspect = renderer.getSize().width / renderer.getSize().height;
-        camera.updateProjectionMatrix();
-    }
+
+    // update the camera
+    cameraFront.left = -window.innerWidth / camFactor;
+    cameraFront.right = window.innerWidth / camFactor;
+    cameraFront.top = window.innerHeight / camFactor;
+    cameraFront.bottom = -window.innerHeight / camFactor;
+    cameraFront.updateProjectionMatrix();
+
+    // update the camera
+    cameraTop.left = -window.innerWidth / camFactor;
+    cameraTop.right = window.innerWidth / camFactor;
+    cameraTop.top = window.innerHeight / camFactor;
+    cameraTop.bottom = -window.innerHeight / camFactor;
+    cameraTop.updateProjectionMatrix();
+
+    // update the camera
+    cameraSide.left = -window.innerWidth / camFactor;
+    cameraSide.right = window.innerWidth / camFactor;
+    cameraSide.top = window.innerHeight / camFactor;
+    cameraSide.bottom = -window.innerHeight / camFactor;
+    cameraSide.updateProjectionMatrix();
+
 }
+
+// function toggleWireFrame(obj){
+//      var f = function(obj2)
+//      {
+//          if(obj2.hasOwnProperty("material")){
+//      obj2.material.wireframe=!obj2.material.wireframe;
+//      }          
+//   }
+//      obj.traverse(f);   
+// }
 
 function onKeyDown(e) {
     'use strict';
@@ -370,11 +413,16 @@ function onKeyDown(e) {
     switch (e.keyCode) {
     case 65: //A
     case 97: //a
+
+
         scene.traverse(function (node) {
             if (node instanceof THREE.Mesh) {
                 node.material.wireframe = !node.material.wireframe;
             }
         });
+
+        // scene.traverse(toggleWireFrame(node));
+
         break;
     case 69:  //E
     case 101: //e
@@ -456,22 +504,36 @@ function init() {
 function animate() {
     'use strict';	
 	
-	if(chair.userData.rotateLeft == true && chair.userData.rotateRight == false)
-		chairTop.rotation.y += Math.PI / 60;
+    var rotValue = Math.PI / 60;
+
+	if(chair.userData.rotateLeft == true && chair.userData.rotateRight == false){
+		chairTop.rotation.y += rotValue;
+    }
 	
-	if(chair.userData.rotateRight == true && chair.userData.rotateLeft == false)
-		chairTop.rotation.y -= Math.PI / 60;
+	if(chair.userData.rotateRight == true && chair.userData.rotateLeft == false){
+		chairTop.rotation.y -= rotValue;
+    }
 		
     
     var timeElapsed = clock.getDelta();
 
     var attrition = 0.4;
 
-    if(Math.abs(chair.userData.vFront) < chair.userData.maxSpeed)
-        chair.userData.vFront += chair.userData.accFront * timeElapsed / 2;
-    
-    if(Math.abs(chair.userData.vFront) > 0 && chair.userData.accFront == 0){
         
+    if(Math.abs(chair.userData.vFront) > 0  || Math.abs(chair.userData.vBack) > 0){   
+        chairWheelsSwivelSet(chairTop.rotation.y);
+        chairWheelsRotationAdd(.1);
+    }
+
+
+
+    if(Math.abs(chair.userData.vFront) < chair.userData.maxSpeed && chair.userData.accFront != 0){
+        chair.userData.vFront += chair.userData.accFront * timeElapsed / 2;
+
+    }
+    
+    if(Math.abs(chair.userData.vFront) > 0 && chair.userData.accFront == 0){        
+
         chair.userData.vFront -= attrition;
 
         if (chair.userData.vFront < 0){
@@ -480,8 +542,11 @@ function animate() {
 
     }
 
-    if(Math.abs(chair.userData.vBack) < chair.userData.maxSpeed)
+    if(Math.abs(chair.userData.vBack) < chair.userData.maxSpeed && chair.userData.accBack != 0){
         chair.userData.vBack += chair.userData.accBack * timeElapsed / 2;
+
+    }
+    
     
     if(Math.abs(chair.userData.vBack) > 0 && chair.userData.accBack == 0){
 
@@ -505,4 +570,29 @@ function animate() {
     render();
     
     requestAnimationFrame(animate);
+}
+
+
+
+function chairWheelsRotationAdd(value) {
+    for (var i = 0, len = chairWheels.length; i < len; i++) {
+        var wheel = chairWheels[i];
+        var s = -1 * ((i%2) * 2) ;
+        wheel.rotation.z += value * s;
+    }
+}
+
+function chairWheelsSwivelSet(value) {
+    for (var i = 0, len = chairWheels.length; i < len; i++) {
+        var wheel = chairWheels[i];
+
+        if (i == 0 || i == 1)
+            wheel.rotation.y = value + (Math.PI / 6) ;
+
+        if (i == 2 || i == 3)
+            wheel.rotation.y = value - (Math.PI / 6) ;
+
+        if (i == 4 || i == 5)
+            wheel.rotation.y = value + (Math.PI / 2) ;
+    }
 }
