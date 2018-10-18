@@ -8,78 +8,65 @@ var geometry, material, mesh;
 
 var clock;
 
+var sphereCount = 10;
+
+var sphere = [];
+
+function randFloat(low, high) {
+
+	return low + Math.random() * ( high - low );
+
+}
 
 ////////////////////////////////////////////////
-//////               ARENA                //////
+//////              BALLS                 //////
 ////////////////////////////////////////////////
 
-function addArenaBase(obj, x, y, z) {
-    'use strict'
-    // width, height, depth
-    geometry = new THREE.CubeGeometry(200, 1, 100);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    obj.add(mesh);
-}
 
-function addArenaShortWall(obj, x, y, z) {
-    'use strict'
-    // width, height, depth
-    geometry = new THREE.CubeGeometry(1, 22.4, 100);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    obj.add(mesh);
-}
-
-function addArenaLongWall(obj, x, y, z) {
-    'use strict'
-    // width, height, depth
-    geometry = new THREE.CubeGeometry(200, 22.4, 1);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    obj.add(mesh);
-}
-
-function createArena(x, y, z) {
+function addSphere(obj, x, y, z){
     'use strict'
 
-    var arena = new THREE.Object3D();
+    geometry = new THREE.SphereGeometry(4, 50, 30, 0, Math.PI * 2, 0, Math.PI * 2);
 
-    material = new THREE.MeshBasicMaterial({color: 0x4d586a, wireframe: true});
-    
-    addArenaBase(arena, 0, 0, 0);
-    addArenaShortWall(arena, 100.5, 11.7, 0);
-    addArenaShortWall(arena, -100.5, 11.7, 0);
-    addArenaLongWall(arena, 0, 11.7, 50.5);
-    addArenaLongWall(arena, 0, 11.7, -50.5);
-
-    scene.add(arena);
-
-    arena.position.x = x;
-    arena.position.y = y;
-    arena.position.z = z;
+    for(var i = 0; i < sphereCount; i++){
+    sphere[i] = new THREE.Mesh(geometry, material);
+    sphere[i].position.set(x, y, z);
+    obj.add(sphere[i]);
+    }
 }
 
-function createBall(x, y, z) {
+function createSphere(x, y, z){
     'use strict'
 
-    var ball = new THREE.Object3D();
+    sphere = new THREE.Object3D();
 
-    geometry = new THREE.SphereGeometry(11.2, 16, 16);
-    material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
-    mesh = new THREE.Mesh(geometry, material);
-    ball.add(mesh);
-    scene.add(ball);
+    //sphere.userData = {acceleration: randFloat(0, 20), maxSpeed: randFloat(0, 30)};
 
-    ball.position.x = x;
-    ball.position.y = y;
-    ball.position.z = z;
+
+    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true});
+    for (var i = 0; i < sphereCount; i++){
+    addSphere(sphere, randFloat(-50, 50), 5, randFloat(-50, 50));
+
+    sphere.position.x = x;
+    sphere.position.y = y;
+    sphere.position.z = z;
+
+    //sphere.direction = {x: Math.random(), z: Math.random()}
+
+    sphere[i].add(new THREE.AxisHelper(10));
+
+    scene.add(sphere);
+
+
+    }
 }
+
 
 
 ////////////////////////////////////////////////
 //////               SCENE                //////
 ////////////////////////////////////////////////
+
 
 function createScene() {
     'use strict';
@@ -87,19 +74,13 @@ function createScene() {
     scene = new THREE.Scene();
 
     scene.background = new THREE.Color( 0xcccccc );
-    
+
     scene.add(new THREE.AxisHelper(10));
-    
-    createArena(0, .5, 0);
 
-    var radius = 11.2;
-    for (var i = 0; i < 10; i++) {
+    createSphere(0, 0, 0);
 
-        var x = Math.random() * (99-radius - (-99+radius)) + (-99+radius);
-        var z = Math.random() * (49-radius - (-49+radius)) + (-49+radius);
 
-        createBall(x, 12.2, z);
-    }
+
 
 }
 
@@ -111,17 +92,15 @@ function createScene() {
 function createCamera() {
     'use strict';
     
-    var camFactor = 14;
-
-    cameraFront = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
+    cameraFront = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraFront.position.set(0,50,50);
     cameraFront.lookAt(new THREE.Vector3(0,50,0));
 
-    cameraTop = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
+    cameraTop = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraTop.position.set(0,50,0);
     cameraTop.lookAt(scene.position);
 
-    cameraSide = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
+    cameraSide = new THREE.OrthographicCamera( window.innerWidth / - 14, window.innerWidth / 14, window.innerHeight / 14, window.innerHeight / - 14, 1, 1000 );
     cameraSide.position.set(50,50,0);
     cameraSide.lookAt(new THREE.Vector3(0,50,0));
 
@@ -131,32 +110,12 @@ function createCamera() {
 function onResize() {
     'use strict';
 
-    var camFactor = 14;
-
-    // notify the renderer of the size change
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    // update the camera
-    cameraFront.left = -window.innerWidth / camFactor;
-    cameraFront.right = window.innerWidth / camFactor;
-    cameraFront.top = window.innerHeight / camFactor;
-    cameraFront.bottom = -window.innerHeight / camFactor;
-    cameraFront.updateProjectionMatrix();
-
-    // update the camera
-    cameraTop.left = -window.innerWidth / camFactor;
-    cameraTop.right = window.innerWidth / camFactor;
-    cameraTop.top = window.innerHeight / camFactor;
-    cameraTop.bottom = -window.innerHeight / camFactor;
-    cameraTop.updateProjectionMatrix();
-
-    // update the camera
-    cameraSide.left = -window.innerWidth / camFactor;
-    cameraSide.right = window.innerWidth / camFactor;
-    cameraSide.top = window.innerHeight / camFactor;
-    cameraSide.bottom = -window.innerHeight / camFactor;
-    cameraSide.updateProjectionMatrix();
-
+    
+    if (window.innerHeight > 0 && window.innerWidth > 0) {
+        camera.aspect = renderer.getSize().width / renderer.getSize().height;
+        camera.updateProjectionMatrix();
+    }
 }
 
 function onKeyDown(e) {
@@ -165,13 +124,11 @@ function onKeyDown(e) {
     switch (e.keyCode) {
     case 65: //A
     case 97: //a
-
         scene.traverse(function (node) {
-            if (node instanceof THREE.Mesh) {
+            if (node instanceof THREE.sphere) {
                 node.material.wireframe = !node.material.wireframe;
             }
         });
-
         break;
     case 69:  //E
     case 101: //e
@@ -190,18 +147,6 @@ function onKeyDown(e) {
     case 51: //3
         camera = cameraTop;
         break;
-    case 37: //left arrow
-        chair.userData.rotateLeft = true;
-        break;
-    case 38: //up arrow
-        chair.userData.accFront = chair.userData.accelaration;
-        break;
-    case 39: //right arrow
-        chair.userData.rotateRight = true;
-        break;
-    case 40: //down arrow
-        chair.userData.accBack = chair.userData.accelaration;
-        break;
     }
 }
 
@@ -209,18 +154,7 @@ function onKeyUp(e) {
     'use strict';
     
     switch (e.keyCode) {
-    case 37: //left arrow
-        chair.userData.rotateLeft = false;
-        break;
-    case 38: //up arrow
-        chair.userData.accFront = 0;
-        break;
-    case 39: //right arrow
-        chair.userData.rotateRight = false;
-        break;
-    case 40: //down arrow
-        chair.userData.accBack = 0;
-        break;
+
     }
 }
 
@@ -235,10 +169,18 @@ function init() {
         antialias: true
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+
+    /*controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = false;*/
+
     document.body.appendChild(renderer.domElement);
    
     createScene();
     createCamera();
+    //createSphere();
 
 
     clock = new THREE.Clock(true);
@@ -251,8 +193,27 @@ function init() {
 }
 
 function animate() {
-    'use strict';	
-	
+    'use strict';
+
+    //controls.update();
+
+   /* for (var i = 0; i < sphereCount; i++){
+        sphere.position.x += sphere.direction.x;
+        sphere.position.z += sphere.direction.z;
+
+        if (sphere[i].position.x < -window.innerWidth || sphere[i].position.x > window.innerWidth){
+            sphere[i].direction.x = -sphere[i].direction.x;
+        }
+
+        if (sphere[i].position.z < -window.innerHeight || sphere[i].position.z > window.innerHeight){
+            sphere[i].direction.z = -sphere[i].direction.z;
+        }
+    }*/
+
+    var timeElapsed = clock.getDelta();
+
+    var attrition = 0.4;
+
     render();
     
     requestAnimationFrame(animate);
