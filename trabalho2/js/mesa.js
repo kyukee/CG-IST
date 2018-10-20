@@ -67,18 +67,23 @@ function createArena(x, y, z) {
     arena.position.z = z;
 }
 
+////////////////////////////////////////////////
+//////              BALLS                 //////
+////////////////////////////////////////////////
+
+function randFloat(low, high) {
+
+    return low + Math.random() * ( high - low );
+
+}
+
 function createBall(x, y, z) {
     'use strict'
 
     var ball = new THREE.Object3D();
 
-    // randoms sao numeros entre -1 e 1
-    // speed serve para aumentar esse intervalo
     var speed = 40;
-    var random1 = (1 + Math.random()*(-2));
-    var random2 = (1 + Math.random()*(-2));
-
-    ball.userData = { vx: random1*speed, vz: random2*speed, m: 1, valid: true};
+    ball.userData = { vx: randFloat(-speed, speed), vz: randFloat(-speed, speed), m: 1, valid: true};
 
     geometry = new THREE.SphereGeometry(11.2, 16, 16);
     material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
@@ -103,27 +108,20 @@ function createScene() {
     'use strict';
     
     scene = new THREE.Scene();
-
     scene.background = new THREE.Color( 0xcccccc );
-    
     scene.add(new THREE.AxisHelper(10));
-    
+
     createArena(0, .5, 0);
 
-    var radius = 11.2;
-
-    // m 1 v 14.142135623730951 teta 0.7853981633974483
-    // m 10000 v 0 teta 6.283185307179586
-    // phi 0.7853981633974483
-    // vx -9.998000199980003 vz -9.998000199980002
+    var sphereRadius = 11.2;
 
     for (var i = 0; i < 10; i++) {
         do{
             var flag = true;
 
             // cria coordenadas aleatorias
-            var x = Math.random() * (99-radius - (-99+radius)) + (-99+radius);
-            var z = Math.random() * (49-radius - (-49+radius)) + (-49+radius);
+            var x = randFloat(-99+sphereRadius, 99-sphereRadius);
+            var z = randFloat(-49+sphereRadius, 49-sphereRadius);
 
             // verifica colisao com todas as bolas ja existentes
             for (var i = 0, len = balls.length; i < len; i++) {
@@ -132,7 +130,7 @@ function createScene() {
 
                 // se se sobrepor a uma bola ja existente, calcula novas coordenadas
                 if(d1!=0 && d2!=0){
-                    if(Math.pow(2*radius,2) >= Math.pow(d1,2) + Math.pow(d2,2)){
+                    if(Math.pow(2*sphereRadius,2) >= Math.pow(d1,2) + Math.pow(d2,2)){
                         flag = false;
                     }
                 }
@@ -140,9 +138,8 @@ function createScene() {
         }
         while(!flag);
 
-        createBall(x, radius+1, z);
+        createBall(x, sphereRadius+1, z);
     }
-
 }
 
 
@@ -199,6 +196,13 @@ function onResize() {
     cameraSide.bottom = -window.innerHeight / camFactor;
     cameraSide.updateProjectionMatrix();
 
+
+    // renderer.setSize(window.innerWidth, window.innerHeight);
+    
+    // if (window.innerHeight > 0 && window.innerWidth > 0) {
+    //     camera.aspect = renderer.getSize().width / renderer.getSize().height;
+    //     camera.updateProjectionMatrix();
+    // }
 }
 
 function onKeyDown(e) {
@@ -207,13 +211,11 @@ function onKeyDown(e) {
     switch (e.keyCode) {
     case 65: //A
     case 97: //a
-
         scene.traverse(function (node) {
-            if (node instanceof THREE.Mesh) {
+            if (node instanceof THREE.mesh) {
                 node.material.wireframe = !node.material.wireframe;
             }
         });
-
         break;
     case 69:  //E
     case 101: //e
@@ -232,18 +234,6 @@ function onKeyDown(e) {
     case 51: //3
         camera = cameraTop;
         break;
-    case 37: //left arrow
-        chair.userData.rotateLeft = true;
-        break;
-    case 38: //up arrow
-        chair.userData.accFront = chair.userData.accelaration;
-        break;
-    case 39: //right arrow
-        chair.userData.rotateRight = true;
-        break;
-    case 40: //down arrow
-        chair.userData.accBack = chair.userData.accelaration;
-        break;
     }
 }
 
@@ -251,18 +241,7 @@ function onKeyUp(e) {
     'use strict';
     
     switch (e.keyCode) {
-    case 37: //left arrow
-        chair.userData.rotateLeft = false;
-        break;
-    case 38: //up arrow
-        chair.userData.accFront = 0;
-        break;
-    case 39: //right arrow
-        chair.userData.rotateRight = false;
-        break;
-    case 40: //down arrow
-        chair.userData.accBack = 0;
-        break;
+
     }
 }
 
@@ -277,6 +256,13 @@ function init() {
         antialias: true
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+
+    /*controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = false;*/
+
     document.body.appendChild(renderer.domElement);
    
     createScene();
@@ -288,7 +274,7 @@ function init() {
     render();
     
     window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
+    // window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
 }
 
@@ -302,8 +288,6 @@ function animate() {
         balls[i].position.x += (balls[i].userData.vx * timeElapsed);
         balls[i].position.z += (balls[i].userData.vz * timeElapsed);
     }
-
-    
 
 
     for (var i = 0, len = balls.length; i < len; i++) {
