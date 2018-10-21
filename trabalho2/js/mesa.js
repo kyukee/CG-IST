@@ -2,7 +2,7 @@
 
 var camera, scene, renderer;
 
-var cameraTop, cameraSide, cameraFront;
+var cameraTop, cameraSide, cameraFront, cameraPerspective, ballCamera;
 
 var geometry, material, mesh;
 
@@ -10,6 +10,8 @@ var clock;
 
 var balls = [];
 var walls = [];
+
+var arena;
 
 
 ////////////////////////////////////////////////
@@ -50,7 +52,7 @@ function addArenaLongWall(obj, x, y, z) {
 function createArena(x, y, z) {
     'use strict'
 
-    var arena = new THREE.Object3D();    
+    arena = new THREE.Object3D();    
 
     material = new THREE.MeshBasicMaterial({color: 0x4d586a, wireframe: true});
     
@@ -77,7 +79,7 @@ function randFloat(low, high) {
 
 }
 
-function createBall(x, y, z) {
+function createBall(x, y, z, isBallToFollow) {
     'use strict'
 
     var ball = new THREE.Object3D();
@@ -86,7 +88,12 @@ function createBall(x, y, z) {
     ball.userData = { vx: randFloat(-speed, speed), vz: randFloat(-speed, speed), m: 1, valid: true};
 
     geometry = new THREE.SphereGeometry(11.2, 16, 16);
-    material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
+
+    if(isBallToFollow)
+        material = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
+    else 
+        material= new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
+
     mesh = new THREE.Mesh(geometry, material);
     ball.add(mesh);
     ball.add(new THREE.AxisHelper(18));
@@ -138,8 +145,10 @@ function createScene() {
         }
         while(!flag);
 
-        createBall(x, sphereRadius+1, z);
+        createBall(x, sphereRadius+1, z, (i == 0) ? true : false);
     }
+
+
 }
 
 
@@ -163,6 +172,15 @@ function createCamera() {
     cameraSide = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
     cameraSide.position.set(50,50,0);
     cameraSide.lookAt(new THREE.Vector3(0,50,0));
+
+    cameraPerspective = new THREE.PerspectiveCamera(70, (window.innerWidth / - camFactor) / (window.innerHeight / - camFactor), 1, 1000);
+    cameraPerspective.position.set(150,100,100);
+    cameraPerspective.lookAt(arena.position);
+
+    ballCamera = new THREE.PerspectiveCamera(70, (window.innerWidth / - camFactor) / (window.innerHeight / - camFactor), 1, 1000);
+    ballCamera.position.set(balls[0].position.x + 5, balls[0].position.y + 5, balls[0].position.z + 5);
+    ballCamera.lookAt(arena.position);
+    balls[0].add(ballCamera);
 
     camera = cameraTop;
 }
@@ -196,6 +214,12 @@ function onResize() {
     cameraSide.bottom = -window.innerHeight / camFactor;
     cameraSide.updateProjectionMatrix();
 
+    cameraPerspective.aspect = (window.innerWidth / - camFactor) / (window.innerHeight / - camFactor);
+    cameraPerspective.updateProjectionMatrix();
+
+    ballCamera.aspect = (window.innerWidth / - camFactor) / (window.innerHeight / - camFactor);
+    ballCamera.updateProjectionMatrix();
+
 
     // renderer.setSize(window.innerWidth, window.innerHeight);
     
@@ -226,13 +250,13 @@ function onKeyDown(e) {
         });
         break;
     case 49: //1
-        camera = cameraFront;
+        camera = cameraTop;
         break;
     case 50: //2
-        camera = cameraSide;
+        camera = cameraPerspective;
         break;
     case 51: //3
-        camera = cameraTop;
+        camera = ballCamera;
         break;
     }
 }
