@@ -13,6 +13,11 @@ var walls = [];
 
 var arena;
 
+var speedupTime = 0;
+var speedCont = 1;
+
+var conttt = 1;
+
 
 ////////////////////////////////////////////////
 //////               ARENA                //////
@@ -304,8 +309,6 @@ function init() {
 
 function animate() {
     'use strict';	
-	
-    // ballMoveTemp(0.1);
 
     var timeElapsed = clock.getDelta();
     for (var i = 0, len = balls.length; i < len; i++) {
@@ -315,15 +318,43 @@ function animate() {
 
 
     for (var i = 0, len = balls.length; i < len; i++) {
-        if(hasColision(balls[i])){
+        // if(hasColision(balls[i])){
             var intersection = findIntersection(balls[i]);
             if(intersection != false){
                 // intersection[0] = objeto com qual ha colisao
                 // intersection[1] = array [x,z] com coordenadas da colisao
                 processCollision2(balls[i], intersection[0], intersection[1]);
             }
+        // }
+    }
+
+    addBallRotation(0.001);
+
+
+
+    // unidade = segundos
+
+    var speedupTime = clock.getElapsedTime();
+
+    var speedupInterval = 4;
+    var speedup = 1.2;
+
+    if(speedupTime > speedupInterval * speedCont){
+
+        speedCont += 1;
+
+        // console.log("speedup now");
+
+        for (var i = 0, len = balls.length; i < len; i++) {
+            balls[i].userData.vx = balls[i].userData.vx * speedup;
+            balls[i].userData.vz = balls[i].userData.vz * speedup;
         }
     }
+
+
+
+
+
 
     render();
     requestAnimationFrame(animate);
@@ -336,7 +367,7 @@ function ballMoveTemp(value) {
     }
 }
 
-// returns true if an objects envolving volume collides with any other envolving volume on the scene
+// returns true if an objects envolvelapsedTime : Floating volume collides with any other envolving volume on the scene
 function hasColision(object) {
     var radius = 20;
 
@@ -514,7 +545,7 @@ function findIntersection(object) {
             }
         }
 
-        console.log(cont1, balls.length, cont2, walls.length);
+        // console.log(cont1, balls.length, cont2, walls.length);
         if(cont1 == balls.length-1 && cont2 == walls.length)
             object.userData.valid = true;
         
@@ -567,6 +598,9 @@ function processCollision1(obj1, obj2, point){
 
 // calcula novas coordenadas validas para os objetos
 function processCollision2(obj1, obj2, point){
+
+    var radius = 11.2;
+
     // nota: funcoes sin, cos, tan utilizam radianos
     // dados do objeto 1
     var m1 = obj1.userData.m;
@@ -588,12 +622,25 @@ function processCollision2(obj1, obj2, point){
 
     // caso em que nao e uma parede
     if (v2_old != 0){
-        // teta 1,1 2,2 or 2,1 1,2 ?
         obj1.userData.vx = (v1_old * Math.cos(teta2-phi) * (m1-m2) + (2*m2*v2_old*Math.cos(teta2-phi))) * Math.cos(phi) / (m1+m2) + (v1_old * Math.sin(teta1-phi) * Math.sin(phi));
         obj1.userData.vz = (v1_old * Math.cos(teta1-phi) * (m1-m2) + (2*m2*v2_old*Math.cos(teta2-phi))) * Math.sin(phi) / (m1+m2) + (v1_old * Math.sin(teta1-phi) * Math.cos(phi));
 
+        // // tentar fazer com que as boals nao intersectem, alterando a sua posicao
+        // var xx1 = obj1.position.x - point[0];
+        // var zz1 = obj1.position.z - point[1];
+        // var angle1 = (obj1.position.x != 0) ? Math.atan(obj2.position.z - obj1.position.z / obj2.position.x - obj1.position.x) : 0;
+        // obj1.position.x += (radius * -Math.sign(xx1)) * Math.cos(angle1) - xx1 * Math.cos(angle1);
+        // obj1.position.z += (radius * -Math.sign(zz1)) * Math.sin(angle1) - zz1 * Math.sin(angle1);
+
         obj2.userData.vx = (v2_old * Math.cos(teta1-phi) * (m2-m1) + (2*m1*v1_old*Math.cos(teta1-phi))) * Math.cos(phi) / (m1+m2) + (v2_old * Math.sin(teta2-phi) * Math.sin(phi));
         obj2.userData.vz = (v2_old * Math.cos(teta2-phi) * (m2-m1) + (2*m1*v1_old*Math.cos(teta1-phi))) * Math.sin(phi) / (m1+m2) + (v2_old * Math.sin(teta2-phi) * Math.cos(phi));
+
+        // var xx2 = obj2.position.x - point[0];
+        // var zz2 = obj2.position.z - point[1];
+        // var angle2 = (obj2.position.x != 0) ? Math.atan(obj1.position.z - obj2.position.z / obj1.position.x - obj2.position.x) : 0;
+        // obj2.position.x += (radius * -Math.sign(xx2)) * Math.cos(angle2) - xx2 * Math.cos(angle2);
+        // obj2.position.z += (radius * -Math.sign(zz2)) * Math.sin(angle2) - zz2 * Math.sin(angle2);
+
     }else{
         if(obj2.position.x == 0){
             obj1.userData.vz = -obj1.userData.vz;
@@ -605,5 +652,15 @@ function processCollision2(obj1, obj2, point){
     // console.log("m", m1, "v", v1_old, "teta", teta1);
     // console.log("m", m2, "v", v2_old, "teta", teta2);
     // console.log("phi", phi);
-    console.log("vx", obj1.userData.vx, "vz", obj1.userData.vz);
+
+    // console.log("vx", obj1.userData.vx, "vz", obj1.userData.vz);
 }
+
+
+function addBallRotation(value) {
+    for (var i = 0, len = balls.length; i < len; i++) {
+        balls[i].rotation.x += balls[i].userData.vx * value;
+        balls[i].rotation.z += balls[i].userData.vz * value;
+    }
+}
+
