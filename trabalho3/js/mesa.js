@@ -8,6 +8,31 @@ var geometry, material, mesh;
 
 var plane;
 
+////////////////////////////////////////////////
+//////               SPOTLIGHT            //////
+////////////////////////////////////////////////
+
+    var spotLight = new THREE.SpotLight(0xffffff);
+    spotLightHelper = new THREE.SpotLightHelper(spotLight);
+    spotLight.add(spotLightHelper);
+    spotLight.position.set(0, 100, 0);
+    //spotLight.target.set(0, 40, 0);
+
+    spotLight.castShadow = true;
+    spotLight.receiveShadow = true;
+
+   /* spotLight.shadow.mapSize.width = 128;
+    spotLight.shadow.mapSize.height = 128;
+    spotLight.shadow.camera.near = 1;
+    spotLight.shadow.camera.far = 200;
+
+    spotLight.intensity = 2;
+    spotLight.penumbra = .5;
+    spotLight.angle = Math.PI / 2.5;
+    spotLight.distance = 200;*/
+
+
+
 
 ////////////////////////////////////////////////
 //////              PLANE                 //////
@@ -539,13 +564,16 @@ function createPlane(x, y, z) {
     //*********
 
     plane.scale.set(8, 8, 8);
-
+    plane.castShadow = true;       //SPOTLIGHT
+    plane.receiveShadow = true;     //SPOTLIGHT
     scene.add(plane);
 
     plane.position.x = x;
     plane.position.y = y;
     plane.position.z = z;
 }
+
+
 
 
 ////////////////////////////////////////////////
@@ -558,6 +586,10 @@ function createScene() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xcccccc );
     scene.add(new THREE.AxisHelper(10));
+    scene.add(spotLight);                           //SPOTLIGHT
+    //scene.add(spotLight.target);
+    scene.add(spotLightHelper);                     //SPOTLIGHT
+    spotLightHelper.update();                       //SPOTLIGHT
 
     createPlane(0, 40, 0);
 }
@@ -691,8 +723,10 @@ function init() {
         antialias: true
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;                          //SPOTLIGHT
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //SPOTLIGHT
     document.body.appendChild(renderer.domElement);
-   
+
     createScene();
     createCamera();
 
