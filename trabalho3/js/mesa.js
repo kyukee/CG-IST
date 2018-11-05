@@ -756,21 +756,21 @@ function onKeyDown(e) {
         if(light.intensity > 0) {
             light.intensity = 0.0;
         } else {
-            light.intensity = 2.0;
+            light.intensity = 1;
         }
         break;
     case 50: //2
         if(light2.intensity > 0) {
             light2.intensity = 0.0;
         } else {
-            light2.intensity = 2.0;
+            light2.intensity = 1;
         }
         break;
     case 51: //3
         if(light3.intensity > 0) {
             light3.intensity = 0.0;
         } else {
-            light3.intensity = 2.0;
+            light3.intensity = 1;
         }
         break;
 
@@ -778,7 +778,7 @@ function onKeyDown(e) {
         if(light4.intensity > 0) {
             light4.intensity = 0.0;
         } else {
-            light4.intensity = 2.0;
+            light4.intensity = 1;
         }
         break;
 
@@ -863,34 +863,34 @@ function init() {
     lightTestCube.castShadow = true;
     scene.add(lightTestCube);
 
-    light = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
-    light.position.y = plane.position.y + 500;
-    light.position.x = plane.position.x - 300;
-    light.position.z = plane.position.z - 300;
+    light = new THREE.SpotLight(0xffffff, 1, 2000, 0.1, 0.2);
+    light.position.y = plane.position.y + 600;
+    light.position.x = plane.position.x - 600;
+    light.position.z = plane.position.z - 600;
     light.target = plane;
     light.castShadow = true;
     scene.add(light);
 
-    light2 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
-    light2.position.y = plane.position.y + 500;
-    light2.position.x = plane.position.x + 300;
-    light2.position.z = plane.position.z - 300;
+    light2 = new THREE.SpotLight(0xffffff, 1, 2000, 0.1, 0.2);
+    light2.position.y = plane.position.y + 600;
+    light2.position.x = plane.position.x + 600;
+    light2.position.z = plane.position.z - 600;
     light2.target = plane;
     light2.castShadow = true;
     scene.add(light2);
 
-    light3 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
-    light3.position.y = plane.position.y + 500;
-    light3.position.x = plane.position.x - 300;
-    light3.position.z = plane.position.z + 300;
+    light3 = new THREE.SpotLight(0xffffff, 1, 2000, 0.1, 0.2);
+    light3.position.y = plane.position.y + 600;
+    light3.position.x = plane.position.x - 600;
+    light3.position.z = plane.position.z + 600;
     light3.target = plane;
     light3.castShadow = true;
     scene.add(light3);
 
-    light4 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
-    light4.position.y = plane.position.y + 500;
-    light4.position.x = plane.position.x + 300;
-    light4.position.z = plane.position.z + 300;
+    light4 = new THREE.SpotLight(0xffffff, 1, 2000, 0.1, 0.2);
+    light4.position.y = plane.position.y + 600;
+    light4.position.x = plane.position.x + 600;
+    light4.position.z = plane.position.z + 600;
     light4.target = plane;
     light4.castShadow = true;
     scene.add(light4);
