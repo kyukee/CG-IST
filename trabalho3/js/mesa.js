@@ -696,7 +696,7 @@ function createCamera() {
     cameraPerspective.position.set(150,100,100);
     cameraPerspective.lookAt(plane.position);
 
-    camera = cameraTop;
+    camera = cameraPerspective;
 }
 
 function onResize() {
@@ -753,13 +753,17 @@ function onKeyDown(e) {
         });
         break;
     case 49: //1
-        camera = cameraSide;
+
         break;
     case 50: //2
-        camera = cameraPerspective;
+        
         break;
     case 51: //3
-        camera = cameraTop;
+        
+        break;
+
+    case 52: //4
+        
         break;
 
     case 78: //N
