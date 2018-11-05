@@ -655,6 +655,7 @@ function createFloor(x, y, z) {
     scene.add(floor);
 }
 
+
 ////////////////////////////////////////////////
 //////               SCENE                //////
 ////////////////////////////////////////////////
@@ -668,6 +669,8 @@ function createScene() {
 
     createPlane(0, 40, 0);
     createFloor(0, 0, 0);
+
+
 }
 
 
@@ -693,7 +696,7 @@ function createCamera() {
     cameraSide.lookAt(new THREE.Vector3(0,50,0));
 
     cameraPerspective = new THREE.PerspectiveCamera(70, (window.innerWidth / - camFactor) / (window.innerHeight / - camFactor), 1, 1000); 
-    cameraPerspective.position.set(150,100,100);
+    cameraPerspective.position.set(150,150,150);
     cameraPerspective.lookAt(plane.position);
 
     camera = cameraPerspective;
@@ -756,21 +759,21 @@ function onKeyDown(e) {
         if(light.intensity > 0) {
             light.intensity = 0.0;
         } else {
-            light.intensity = 2.0;
+            light.intensity = 1;
         }
         break;
     case 50: //2
         if(light2.intensity > 0) {
             light2.intensity = 0.0;
         } else {
-            light2.intensity = 2.0;
+            light2.intensity = 1;
         }
         break;
     case 51: //3
         if(light3.intensity > 0) {
             light3.intensity = 0.0;
         } else {
-            light3.intensity = 2.0;
+            light3.intensity = 1;
         }
         break;
 
@@ -778,7 +781,7 @@ function onKeyDown(e) {
         if(light4.intensity > 0) {
             light4.intensity = 0.0;
         } else {
-            light4.intensity = 2.0;
+            light4.intensity = 1;
         }
         break;
 
@@ -863,34 +866,26 @@ function init() {
     lightTestCube.castShadow = true;
     scene.add(lightTestCube);
 
-    light = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
-    light.position.y = plane.position.y + 500;
-    light.position.x = plane.position.x - 300;
-    light.position.z = plane.position.z - 300;
+    light = new THREE.SpotLight(0xffffff, 1, 2000, 0.25, 0.2);
+    light.position.set(150,150,-150);
     light.target = plane;
     light.castShadow = true;
     scene.add(light);
 
-    light2 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
-    light2.position.y = plane.position.y + 500;
-    light2.position.x = plane.position.x + 300;
-    light2.position.z = plane.position.z - 300;
+    light2 = new THREE.SpotLight(0xffffff, 1, 2000, 0.25, 0.2);
+    light2.position.set(150,150,150);
     light2.target = plane;
     light2.castShadow = true;
     scene.add(light2);
 
-    light3 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
-    light3.position.y = plane.position.y + 500;
-    light3.position.x = plane.position.x - 300;
-    light3.position.z = plane.position.z + 300;
+    light3 = new THREE.SpotLight(0xffffff, 1, 2000, 0.25, 0.2);
+    light3.position.set(-150,150,150);
     light3.target = plane;
     light3.castShadow = true;
     scene.add(light3);
 
-    light4 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
-    light4.position.y = plane.position.y + 500;
-    light4.position.x = plane.position.x + 300;
-    light4.position.z = plane.position.z + 300;
+    light4 = new THREE.SpotLight(0xffffff, 1, 2000, 0.25, 0.2);
+    light4.position.set(-150,150,-150);
     light4.target = plane;
     light4.castShadow = true;
     scene.add(light4);
@@ -921,6 +916,46 @@ function init() {
 
     helper = new THREE.CameraHelper(directionalLight.shadow.camera);
     scene.add(helper);
+
+////////////////////////////////////////////////
+//////               CONE                 //////
+////////////////////////////////////////////////
+
+    geometry = new THREE.ConeGeometry( 5, 10, 32 );
+    material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var cone = new THREE.Mesh(geometry, material);
+    var cone2 = new THREE.Mesh(geometry, material);
+    var cone3 = new THREE.Mesh(geometry, material);
+    var cone4 = new THREE.Mesh(geometry, material);
+
+
+
+    cone.position.set(-100,100,-100);
+    cone.rotation.x -= Math.PI / 4;
+    cone.rotation.z += Math.PI / 5;
+
+    cone2.position.set(100,100,-100);
+    cone2.rotation.x -= Math.PI / 4;
+    cone2.rotation.z -= Math.PI / 5;
+
+
+    cone3.position.set(-100,100,100);
+    cone3.rotation.x += Math.PI / 4;
+    cone3.rotation.z += Math.PI / 5;
+
+
+    cone4.position.set(100,100,100);
+    cone4.rotation.x += Math.PI / 4;
+    cone4.rotation.z -= Math.PI / 5;
+
+
+
+    scene.add(cone);
+    scene.add(cone2);
+    scene.add(cone3);
+    scene.add(cone4);
+
+
 
 
     renderer.shadowMap.enabled = true;                  
