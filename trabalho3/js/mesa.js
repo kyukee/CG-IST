@@ -4,32 +4,11 @@ var camera, scene, renderer;
 
 var cameraTop, cameraSide, cameraFront, cameraPerspective, ballCamera;
 
-var geometry, material, mesh;
+var geometry, material, mesh, lightTestCube;
 
 var plane, floor;
 
 var helper, light, ambientLight, pointLight, directionalLight;
-
-
-
-
-////////////////////////////////////////////////
-//////         DIRECTIONAL LIGHT          //////
-////////////////////////////////////////////////
-
-// light = new THREE.DirectionalLight(0xffffff);
-// var helper1 = new THREE.DirectionalLightHelper(light, 5);
-// light.position.set(0, 50, 0);
-// light.castShadow = true;
-// scene.add(helper1);
-
-// light.shadow.mapSize.width = 512;
-// light.shadow.mapSize.height = 512;
-// light.shadow.camera.near = 0.5;
-// light.shadow.camera.far = 500;
-
-// helper2 = new THREE.CameraHelper(light.shadow.camera);
-// scene.add(helper2);
 
 
 ////////////////////////////////////////////////
@@ -759,12 +738,12 @@ function init() {
     //////////////////// ////////////////////// 
     geometry = new THREE.CubeGeometry(10, 10, 10);
     material = new THREE.MeshPhongMaterial({ color: 0xff0000, wireframe: false }); 
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(50, 20, 50);
-    mesh.castShadow = true;
-    scene.add(mesh);
+    lightTestCube = new THREE.Mesh(geometry, material);
+    lightTestCube.position.set(50, 20, 50);
+    lightTestCube.castShadow = true;
+    scene.add(lightTestCube);
 
-    // light = new THREE.SpotLight(0xffffff, 4.0, 3000);
+    // light = new THREE.SpotLight(0xffffff, 0.5, 3000);
     // light.position.y = plane.position.y + 50;
     // light.position.x = plane.position.x + 100;
     // light.target = plane;
@@ -780,27 +759,32 @@ function init() {
     // scene.add(ambientLight);
 
     directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(0, 500, 500);
-    directionalLight.target = plane;
+    directionalLight.position.set(60, 120, 60);
+    directionalLight.target = floor;
     directionalLight.castShadow = true;
+    directionalLight.shadowDarkness = 0.5;
     scene.add(directionalLight);
 
     directionalLight.shadow.mapSize.width = 512;
     directionalLight.shadow.mapSize.height = 512;
     directionalLight.shadow.camera.near = 0.5;
     directionalLight.shadow.camera.far = cameraPerspective.far;
+    directionalLight.shadowCameraLeft = -60;
+    directionalLight.shadowCameraRight = 60;
+    directionalLight.shadowCameraTop = 60;
+    directionalLight.shadowCameraBottom = -60;
 
     helper = new THREE.CameraHelper(directionalLight.shadow.camera);
     scene.add(helper);
-
 
 
     renderer.shadowMap.enabled = true;                  
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;           
 
     renderer.shadowCameraNear = 3;
-    renderer.shadowCameraFar = cameraPerspective.far;
+    renderer.shadowCameraFar = 5;
     renderer.shadowCameraFov = 50;
+
 
     renderer.shadowMapBias = 0.0039;
     renderer.shadowMapDarkness = 0.5;
