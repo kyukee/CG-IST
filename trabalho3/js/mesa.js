@@ -8,7 +8,7 @@ var geometry, material, mesh, lightTestCube;
 
 var plane, floor;
 
-var helper, light, ambientLight, pointLight, directionalLight;
+var helper, light, light2, light3, light4, ambientLight, pointLight, directionalLight;
 
 
 ////////////////////////////////////////////////
@@ -753,17 +753,17 @@ function onKeyDown(e) {
         });
         break;
     case 49: //1
-
+        light;
         break;
     case 50: //2
-        
+        light2;
         break;
     case 51: //3
-        
+        light3;
         break;
 
     case 52: //4
-        
+        light4;
         break;
 
     case 78: //N
@@ -843,12 +843,37 @@ function init() {
     lightTestCube.castShadow = true;
     scene.add(lightTestCube);
 
-    // light = new THREE.SpotLight(0xffffff, 0.5, 3000);
-    // light.position.y = plane.position.y + 50;
-    // light.position.x = plane.position.x + 100;
-    // light.target = plane;
-    // light.castShadow = true;
-    // scene.add(light);
+    light = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.3, 0.2);
+    light.position.y = plane.position.y + 500;
+    light.position.x = plane.position.x - 300;
+    light.position.z = plane.position.z - 300;
+    light.target = plane;
+    light.castShadow = true;
+    scene.add(light);
+
+    light2 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.3, 0.2);
+    light2.position.y = plane.position.y + 500;
+    light2.position.x = plane.position.x + 300;
+    light2.position.z = plane.position.z - 300;
+    light2.target = plane;
+    light2.castShadow = true;
+    scene.add(light2);
+
+    light3 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.3, 0.2);
+    light3.position.y = plane.position.y + 500;
+    light3.position.x = plane.position.x - 300;
+    light3.position.z = plane.position.z + 300;
+    light3.target = plane;
+    light3.castShadow = true;
+    scene.add(light3);
+
+    light4 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.3, 0.2);
+    light4.position.y = plane.position.y + 500;
+    light4.position.x = plane.position.x + 300;
+    light4.position.z = plane.position.z + 300;
+    light4.target = plane;
+    light4.castShadow = true;
+    scene.add(light4);
 
     // pointLight = new THREE.PointLight(0xffffff, 2.0, 100);
     // scene.add(pointLight);
