@@ -753,17 +753,33 @@ function onKeyDown(e) {
         });
         break;
     case 49: //1
-        light;
+        if(light.intensity > 0) {
+            light.intensity = 0.0;
+        } else {
+            light.intensity = 2.0;
+        }
         break;
     case 50: //2
-        light2;
+        if(light2.intensity > 0) {
+            light2.intensity = 0.0;
+        } else {
+            light2.intensity = 2.0;
+        }
         break;
     case 51: //3
-        light3;
+        if(light3.intensity > 0) {
+            light3.intensity = 0.0;
+        } else {
+            light3.intensity = 2.0;
+        }
         break;
 
     case 52: //4
-        light4;
+        if(light4.intensity > 0) {
+            light4.intensity = 0.0;
+        } else {
+            light4.intensity = 2.0;
+        }
         break;
 
     case 78: //N
