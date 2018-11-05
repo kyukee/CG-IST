@@ -768,10 +768,10 @@ function onKeyDown(e) {
 
     case 78: //N
     case 110: //n
-        if(directionalLight.intensity > 0) {
-            directionalLight.intensity = 0.0;
+        if(directionalLight.visible) {
+            directionalLight.visible = false;
         } else {
-            directionalLight.intensity = 1.1;
+            directionalLight.visible = true;
         }
         break;
 
