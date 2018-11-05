@@ -6,32 +6,30 @@ var cameraTop, cameraSide, cameraFront, cameraPerspective, ballCamera;
 
 var geometry, material, mesh;
 
-var plane;
+var plane, floor;
+
+var helper, light, ambientLight, pointLight, directionalLight;
+
+
+
 
 ////////////////////////////////////////////////
-//////               SPOTLIGHT            //////
+//////         DIRECTIONAL LIGHT          //////
 ////////////////////////////////////////////////
 
-    var spotLight = new THREE.SpotLight(0xffffff);
-    spotLightHelper = new THREE.SpotLightHelper(spotLight);
-    spotLight.add(spotLightHelper);
-    spotLight.position.set(0, 100, 0);
-    //spotLight.target.set(0, 40, 0);
+// light = new THREE.DirectionalLight(0xffffff);
+// var helper1 = new THREE.DirectionalLightHelper(light, 5);
+// light.position.set(0, 50, 0);
+// light.castShadow = true;
+// scene.add(helper1);
 
-    spotLight.castShadow = true;
-    spotLight.receiveShadow = true;
+// light.shadow.mapSize.width = 512;
+// light.shadow.mapSize.height = 512;
+// light.shadow.camera.near = 0.5;
+// light.shadow.camera.far = 500;
 
-   /* spotLight.shadow.mapSize.width = 128;
-    spotLight.shadow.mapSize.height = 128;
-    spotLight.shadow.camera.near = 1;
-    spotLight.shadow.camera.far = 200;
-
-    spotLight.intensity = 2;
-    spotLight.penumbra = .5;
-    spotLight.angle = Math.PI / 2.5;
-    spotLight.distance = 200;*/
-
-
+// helper2 = new THREE.CameraHelper(light.shadow.camera);
+// scene.add(helper2);
 
 
 ////////////////////////////////////////////////
@@ -131,11 +129,10 @@ function createPlane(x, y, z) {
 
 
     // nose color
-    material =     new THREE.MeshLambertMaterial({
+    material =     new THREE.MeshPhongMaterial({
         color: 0xff0000,
         emissive: 0x3a3a3a
     })
-
 
     //*********
     vertices = [
@@ -204,7 +201,7 @@ function createPlane(x, y, z) {
 
 
     // fuselage color
-    material =     new THREE.MeshLambertMaterial({
+    material =     new THREE.MeshPhongMaterial({
         color: 0xff0000,
         emissive: 0x01f0f3
     })
@@ -285,7 +282,7 @@ function createPlane(x, y, z) {
 
 
     // jet engine color
-    material =     new THREE.MeshLambertMaterial({
+    material =     new THREE.MeshPhongMaterial({
         color: 0xff0000,
         emissive: 0xFF8C00
     })
@@ -358,7 +355,7 @@ function createPlane(x, y, z) {
 
 
     // wing color
-    material =     new THREE.MeshLambertMaterial({
+    material =     new THREE.MeshPhongMaterial({
         color: 0xff0000,
         emissive: 0x3a3a3a
     })
@@ -419,7 +416,7 @@ function createPlane(x, y, z) {
 
 
     // cockpit color
-    material =     new THREE.MeshLambertMaterial({
+    material =     new THREE.MeshPhongMaterial({
         color: 0x87CEEB,
         emissive: 0x00FFFF
     })
@@ -460,7 +457,7 @@ function createPlane(x, y, z) {
 
 
     // back fins color
-    material =     new THREE.MeshLambertMaterial({
+    material =     new THREE.MeshPhongMaterial({
         color: 0xff0000,
         emissive: 0x3a3a3a
     })
@@ -564,8 +561,8 @@ function createPlane(x, y, z) {
     //*********
 
     plane.scale.set(8, 8, 8);
-    plane.castShadow = true;       //SPOTLIGHT
-    plane.receiveShadow = true;     //SPOTLIGHT
+    plane.castShadow = true;   
+
     scene.add(plane);
 
     plane.position.x = x;
@@ -573,8 +570,15 @@ function createPlane(x, y, z) {
     plane.position.z = z;
 }
 
-
-
+function createFloor(x, y, z) {
+    'use strict';
+    geometry = new THREE.PlaneGeometry(300, 300, 32, 32);
+    material = new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: false});
+    floor = new THREE.Mesh(geometry, material);
+    floor.rotation.x -= Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+}
 
 ////////////////////////////////////////////////
 //////               SCENE                //////
@@ -586,12 +590,9 @@ function createScene() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xcccccc );
     scene.add(new THREE.AxisHelper(10));
-    scene.add(spotLight);                           //SPOTLIGHT
-    //scene.add(spotLight.target);
-    scene.add(spotLightHelper);                     //SPOTLIGHT
-    spotLightHelper.update();                       //SPOTLIGHT
 
     createPlane(0, 40, 0);
+    createFloor(0, 0, 0);
 }
 
 
@@ -615,6 +616,10 @@ function createCamera() {
     cameraSide = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
     cameraSide.position.set(80,50,0);
     cameraSide.lookAt(new THREE.Vector3(0,50,0));
+
+    cameraPerspective = new THREE.PerspectiveCamera(70, (window.innerWidth / - camFactor) / (window.innerHeight / - camFactor), 1, 1000); 
+    cameraPerspective.position.set(150,100,100);
+    cameraPerspective.lookAt(plane.position);
 
     camera = cameraTop;
 }
@@ -647,6 +652,9 @@ function onResize() {
     cameraSide.top = window.innerHeight / camFactor;
     cameraSide.bottom = -window.innerHeight / camFactor;
     cameraSide.updateProjectionMatrix();
+
+    cameraPerspective.aspect = (window.innerWidth / - camFactor) / (window.innerHeight / - camFactor);
+    cameraPerspective.updateProjectionMatrix(); 
 }
 
 function onKeyDown(e) {
@@ -673,11 +681,27 @@ function onKeyDown(e) {
         camera = cameraSide;
         break;
     case 50: //2
-        camera = cameraFront;
+        camera = cameraPerspective;
         break;
     case 51: //3
         camera = cameraTop;
         break;
+
+    case 78: //N
+    case 110: //n
+
+        break;
+
+    case 76: //L
+    case 108: //l
+
+        break;
+
+    case 71: //G
+    case 103: //g
+
+        break;
+
     case 37: //left arrow
         plane.userData.pitchLeft = true;
         break;
@@ -723,12 +747,65 @@ function init() {
         antialias: true
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;                          //SPOTLIGHT
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //SPOTLIGHT
+
     document.body.appendChild(renderer.domElement);
 
     createScene();
     createCamera();
+
+
+    //////////////////// //////////////////////
+    ////////////// TESTING //////////////////// 
+    //////////////////// ////////////////////// 
+    geometry = new THREE.CubeGeometry(10, 10, 10);
+    material = new THREE.MeshPhongMaterial({ color: 0xff0000, wireframe: false }); 
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(50, 20, 50);
+    mesh.castShadow = true;
+    scene.add(mesh);
+
+    // light = new THREE.SpotLight(0xffffff, 4.0, 3000);
+    // light.position.y = plane.position.y + 50;
+    // light.position.x = plane.position.x + 100;
+    // light.target = plane;
+    // light.castShadow = true;
+    // scene.add(light);
+
+    // pointLight = new THREE.PointLight(0xffffff, 2.0, 100);
+    // scene.add(pointLight);
+
+    // pointLight.position.set(0, plane.position.y+20, 0);
+
+    // ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // scene.add(ambientLight);
+
+    directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(0, 500, 500);
+    directionalLight.target = plane;
+    directionalLight.castShadow = true;
+    scene.add(directionalLight);
+
+    directionalLight.shadow.mapSize.width = 512;
+    directionalLight.shadow.mapSize.height = 512;
+    directionalLight.shadow.camera.near = 0.5;
+    directionalLight.shadow.camera.far = cameraPerspective.far;
+
+    helper = new THREE.CameraHelper(directionalLight.shadow.camera);
+    scene.add(helper);
+
+
+
+    renderer.shadowMap.enabled = true;                  
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;           
+
+    renderer.shadowCameraNear = 3;
+    renderer.shadowCameraFar = cameraPerspective.far;
+    renderer.shadowCameraFov = 50;
+
+    renderer.shadowMapBias = 0.0039;
+    renderer.shadowMapDarkness = 0.5;
+    renderer.shadowMapWidth = 1024;
+    renderer.shadowMapHeight = 1024;
 
     render();
     
@@ -738,7 +815,7 @@ function init() {
 }
 
 function animate() {
-    'use strict';	
+    'use strict';   
 
     var rotValue = Math.PI / 60;
 
