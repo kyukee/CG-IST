@@ -843,7 +843,7 @@ function init() {
     lightTestCube.castShadow = true;
     scene.add(lightTestCube);
 
-    light = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.3, 0.2);
+    light = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
     light.position.y = plane.position.y + 500;
     light.position.x = plane.position.x - 300;
     light.position.z = plane.position.z - 300;
@@ -851,7 +851,7 @@ function init() {
     light.castShadow = true;
     scene.add(light);
 
-    light2 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.3, 0.2);
+    light2 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
     light2.position.y = plane.position.y + 500;
     light2.position.x = plane.position.x + 300;
     light2.position.z = plane.position.z - 300;
@@ -859,7 +859,7 @@ function init() {
     light2.castShadow = true;
     scene.add(light2);
 
-    light3 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.3, 0.2);
+    light3 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
     light3.position.y = plane.position.y + 500;
     light3.position.x = plane.position.x - 300;
     light3.position.z = plane.position.z + 300;
@@ -867,7 +867,7 @@ function init() {
     light3.castShadow = true;
     scene.add(light3);
 
-    light4 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.3, 0.2);
+    light4 = new THREE.SpotLight(0xffffff, 2.0, 2000, 0.1, 0.2);
     light4.position.y = plane.position.y + 500;
     light4.position.x = plane.position.x + 300;
     light4.position.z = plane.position.z + 300;
@@ -883,7 +883,7 @@ function init() {
     // ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     // scene.add(ambientLight);
 
-    directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  /*  directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(60, 120, 60);
     directionalLight.target = floor;
     directionalLight.castShadow = true;
@@ -902,7 +902,7 @@ function init() {
     helper = new THREE.CameraHelper(directionalLight.shadow.camera);
     scene.add(helper);
 
-
+*/
     renderer.shadowMap.enabled = true;                  
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;           
 
