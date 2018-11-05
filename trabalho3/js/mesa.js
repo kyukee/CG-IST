@@ -108,7 +108,7 @@ function createPlane(x, y, z) {
 
 
     // nose color
-    material =     new THREE.MeshPhongMaterial({
+    material = new THREE.MeshPhongMaterial({
         color: 0xff0000,
         emissive: 0x3a3a3a
     })
@@ -120,7 +120,9 @@ function createPlane(x, y, z) {
         vertex_array[2]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[0],
@@ -128,7 +130,9 @@ function createPlane(x, y, z) {
         vertex_array[3]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[0],
@@ -136,7 +140,9 @@ function createPlane(x, y, z) {
         vertex_array[4]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[0],
@@ -144,7 +150,9 @@ function createPlane(x, y, z) {
         vertex_array[5]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[0],
@@ -152,7 +160,9 @@ function createPlane(x, y, z) {
         vertex_array[6]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[0],
@@ -160,7 +170,9 @@ function createPlane(x, y, z) {
         vertex_array[7]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[0],
@@ -168,7 +180,9 @@ function createPlane(x, y, z) {
         vertex_array[8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[0],
@@ -176,7 +190,9 @@ function createPlane(x, y, z) {
         vertex_array[1]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
 
 
     // fuselage color
@@ -194,7 +210,9 @@ function createPlane(x, y, z) {
         vertex_array[2+8]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[3],
@@ -203,7 +221,9 @@ function createPlane(x, y, z) {
         vertex_array[3+8]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[4],
@@ -212,7 +232,9 @@ function createPlane(x, y, z) {
         vertex_array[4+8]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[5],
@@ -221,7 +243,9 @@ function createPlane(x, y, z) {
         vertex_array[5+8]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[6],
@@ -230,7 +254,9 @@ function createPlane(x, y, z) {
         vertex_array[6+8]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[7],
@@ -239,7 +265,9 @@ function createPlane(x, y, z) {
         vertex_array[7+8]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[8],
@@ -248,7 +276,9 @@ function createPlane(x, y, z) {
         vertex_array[8+8]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[1],
@@ -257,7 +287,9 @@ function createPlane(x, y, z) {
         vertex_array[1+8]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
 
 
     // jet engine color
@@ -274,7 +306,9 @@ function createPlane(x, y, z) {
         vertex_array[1+8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[17],
@@ -282,7 +316,9 @@ function createPlane(x, y, z) {
         vertex_array[2+8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[17],
@@ -290,7 +326,9 @@ function createPlane(x, y, z) {
         vertex_array[3+8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[17],
@@ -298,7 +336,9 @@ function createPlane(x, y, z) {
         vertex_array[4+8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[17],
@@ -306,7 +346,9 @@ function createPlane(x, y, z) {
         vertex_array[5+8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[17],
@@ -314,7 +356,9 @@ function createPlane(x, y, z) {
         vertex_array[6+8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[17],
@@ -322,7 +366,9 @@ function createPlane(x, y, z) {
         vertex_array[7+8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[17],
@@ -330,7 +376,9 @@ function createPlane(x, y, z) {
         vertex_array[8+8]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
 
 
     // wing color
@@ -347,7 +395,9 @@ function createPlane(x, y, z) {
         vertex_array[20]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[21],
@@ -356,7 +406,9 @@ function createPlane(x, y, z) {
         vertex_array[19]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[20],
@@ -365,7 +417,9 @@ function createPlane(x, y, z) {
         vertex_array[18]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[25],
@@ -373,7 +427,9 @@ function createPlane(x, y, z) {
         vertex_array[23]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[25],
@@ -382,7 +438,9 @@ function createPlane(x, y, z) {
         vertex_array[24]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[26],
@@ -391,7 +449,9 @@ function createPlane(x, y, z) {
         vertex_array[23]
     ];
     drawSquareFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
 
 
     // cockpit color
@@ -407,7 +467,9 @@ function createPlane(x, y, z) {
         vertex_array[28]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[32],
@@ -415,7 +477,9 @@ function createPlane(x, y, z) {
         vertex_array[29]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[32],
@@ -423,7 +487,9 @@ function createPlane(x, y, z) {
         vertex_array[30]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[32],
@@ -431,7 +497,9 @@ function createPlane(x, y, z) {
         vertex_array[31]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
 
 
@@ -448,7 +516,9 @@ function createPlane(x, y, z) {
         vertex_array[33]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[37],
@@ -456,7 +526,9 @@ function createPlane(x, y, z) {
         vertex_array[36]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[37],
@@ -464,7 +536,9 @@ function createPlane(x, y, z) {
         vertex_array[35]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[37],
@@ -472,7 +546,9 @@ function createPlane(x, y, z) {
         vertex_array[34]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[42],
@@ -480,7 +556,9 @@ function createPlane(x, y, z) {
         vertex_array[38]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[42],
@@ -488,7 +566,9 @@ function createPlane(x, y, z) {
         vertex_array[41]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[42],
@@ -496,7 +576,9 @@ function createPlane(x, y, z) {
         vertex_array[40]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[42],
@@ -504,7 +586,9 @@ function createPlane(x, y, z) {
         vertex_array[39]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[47],
@@ -512,7 +596,9 @@ function createPlane(x, y, z) {
         vertex_array[44]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[47],
@@ -520,7 +606,9 @@ function createPlane(x, y, z) {
         vertex_array[45]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[47],
@@ -528,7 +616,9 @@ function createPlane(x, y, z) {
         vertex_array[46]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
     vertices = [
         vertex_array[47],
@@ -536,7 +626,9 @@ function createPlane(x, y, z) {
         vertex_array[43]
     ];
     drawTriangleFace(vertices);
-    plane.add( new THREE.Mesh(geometry, material) );
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true;
+    plane.add( mesh );
     //*********
 
     plane.scale.set(8, 8, 8);
@@ -548,6 +640,10 @@ function createPlane(x, y, z) {
     plane.position.y = y;
     plane.position.z = z;
 }
+
+////////////////////////////////////////////////
+//////               FLOOR                //////
+////////////////////////////////////////////////
 
 function createFloor(x, y, z) {
     'use strict';
