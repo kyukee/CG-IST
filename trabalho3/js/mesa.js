@@ -10,6 +10,18 @@ var plane, floor;
 
 var helper, light, light2, light3, light4, ambientLight, pointLight, directionalLight;
 
+var accentMaterialPhong, accentMaterialBasic, accentMaterialLambert;
+var bodyMaterialPhong, bodyMaterialBasic, bodyMaterialLambert;
+var glassMaterialPhong, glassMaterialBasic, glassMaterialLambert;
+
+var currentMaterial;
+
+var noseMeshes = [];
+var fuselageMeshes = [];
+var wingMeshes = [];
+var cockpitMeshes = [];
+var backFinsMeshes = [];
+
 
 ////////////////////////////////////////////////
 //////              PLANE                 //////
@@ -106,12 +118,60 @@ function createPlane(x, y, z) {
 
     ];
 
-
-    // nose color
-    material = new THREE.MeshPhongMaterial({
+    // all different materials and variations
+    accentMaterialPhong = new THREE.MeshPhongMaterial({
         color: 0xff0000,
-        emissive: 0x3a3a3a
+        emissive: 0x000000,
+        shininess: 50
     })
+    accentMaterialBasic = new THREE.MeshBasicMaterial({
+        color: 0xff0000, 
+        opacity: 1, 
+        wireframe: false
+    })
+    accentMaterialLambert = new THREE.MeshLambertMaterial({
+        color: 0xff0000,
+        emissive: 0x000000,
+        emissiveIntensity: 1,
+        shininess: 50
+    })
+
+    bodyMaterialPhong = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        emissive: 0x000000,
+        shininess: 50
+    })
+    bodyMaterialBasic = new THREE.MeshBasicMaterial({
+        color: 0xffffff, 
+        opacity: 1, 
+        wireframe: false
+    })
+    bodyMaterialLambert = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        emissive: 0x000000,
+        emissiveIntensity: 1,
+        shininess: 50
+    })
+
+    glassMaterialPhong = new THREE.MeshPhongMaterial({
+        color: 0x87CEEB,
+        emissive: 0x000000,
+        shininess: 100
+    })
+    glassMaterialBasic = new THREE.MeshBasicMaterial({
+        color: 0x87CEEB, 
+        opacity: 1, 
+        wireframe: false
+    })
+    glassMaterialLambert = new THREE.MeshLambertMaterial({
+        color: 0x87CEEB,
+        emissive: 0x000000,
+        emissiveIntensity: 1,
+        shininess: 100
+    })
+
+    // ********************+ nose color ********************+
+    material = accentMaterialPhong;
 
     //*********
     vertices = [
@@ -122,6 +182,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    noseMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -132,6 +193,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    noseMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -142,6 +204,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    noseMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -152,6 +215,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    noseMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -162,6 +226,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    noseMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -172,6 +237,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    noseMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -182,6 +248,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    noseMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -192,15 +259,12 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    noseMeshes.push(mesh);
     plane.add( mesh );
 
 
-    // fuselage color
-    material =     new THREE.MeshPhongMaterial({
-        color: 0xff0000,
-        emissive: 0x01f0f3
-    })
-
+    // ********************+ fuselage color ********************+
+    material = bodyMaterialPhong;
 
     //*********
     vertices = [
@@ -212,6 +276,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    fuselageMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -223,6 +288,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    fuselageMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -234,6 +300,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    fuselageMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -245,6 +312,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    fuselageMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -256,6 +324,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    fuselageMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -267,6 +336,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    fuselageMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -278,6 +348,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    fuselageMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -289,13 +360,14 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    fuselageMeshes.push(mesh);
     plane.add( mesh );
 
 
-    // jet engine color
+    // ********************+ jet engine color ********************+
     material =     new THREE.MeshPhongMaterial({
-        color: 0xff0000,
-        emissive: 0xFF8C00
+        color: 0xFF8C00,
+        emissive: 0x000000
     })
 
 
@@ -381,12 +453,8 @@ function createPlane(x, y, z) {
     plane.add( mesh );
 
 
-    // wing color
-    material =     new THREE.MeshPhongMaterial({
-        color: 0xff0000,
-        emissive: 0x3a3a3a
-    })
-
+    // ********************+ wing color ********************+
+    material = accentMaterialPhong;
 
     //*********
     vertices = [
@@ -397,6 +465,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    wingMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -408,6 +477,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    wingMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -419,6 +489,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    wingMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -429,6 +500,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    wingMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -440,6 +512,7 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    wingMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -451,14 +524,12 @@ function createPlane(x, y, z) {
     drawSquareFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    wingMeshes.push(mesh);
     plane.add( mesh );
 
 
-    // cockpit color
-    material =     new THREE.MeshPhongMaterial({
-        color: 0x87CEEB,
-        emissive: 0x00FFFF
-    })
+    // ********************+ cockpit color ********************+
+    material = glassMaterialPhong;
 
     //*********
     vertices = [
@@ -469,6 +540,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    cockpitMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -479,6 +551,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    cockpitMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -489,6 +562,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    cockpitMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -499,15 +573,13 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    cockpitMeshes.push(mesh);
     plane.add( mesh );
     //*********
 
 
-    // back fins color
-    material =     new THREE.MeshPhongMaterial({
-        color: 0xff0000,
-        emissive: 0x3a3a3a
-    })
+    // ********************+ back fins color ********************+
+    material = accentMaterialPhong;
 
 
     vertices = [
@@ -518,6 +590,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -528,6 +601,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -538,6 +612,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -548,6 +623,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -558,6 +634,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -568,6 +645,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -578,6 +656,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -588,6 +667,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -598,6 +678,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -608,6 +689,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -618,6 +700,7 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
     vertices = [
@@ -628,11 +711,12 @@ function createPlane(x, y, z) {
     drawTriangleFace(vertices);
     mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true;
+    backFinsMeshes.push(mesh);
     plane.add( mesh );
     //*********
 
     plane.scale.set(8, 8, 8);
-    plane.castShadow = true;   
+    plane.castShadow = true;
 
     scene.add(plane);
 
@@ -797,10 +881,124 @@ function onKeyDown(e) {
     case 76: //L
     case 108: //l
 
+        for (var i = 0, len = noseMeshes.length; i < len; i++) {
+            var mesh = noseMeshes[i];
+
+            if(mesh.material == accentMaterialBasic){   
+                if(currentMaterial == "phong"){
+                    mesh.material = accentMaterialPhong;
+                }else{
+                    mesh.material = accentMaterialLambert;
+                }
+            }else{
+                mesh.material = accentMaterialBasic;
+            }
+        }
+        for (var i = 0, len = fuselageMeshes.length; i < len; i++) {
+            var mesh = fuselageMeshes[i];
+
+            if(mesh.material == bodyMaterialBasic){   
+                if(currentMaterial == "phong"){
+                    mesh.material = bodyMaterialPhong;
+                }else{
+                    mesh.material = bodyMaterialLambert;
+                }
+            }else{
+                mesh.material = bodyMaterialBasic;
+            }
+        }
+        for (var i = 0, len = wingMeshes.length; i < len; i++) {
+            var mesh = wingMeshes[i];
+
+            if(mesh.material == accentMaterialBasic){   
+                if(currentMaterial == "phong"){
+                    mesh.material = accentMaterialPhong;
+                }else{
+                    mesh.material = accentMaterialLambert;
+                }
+            }else{
+                mesh.material = accentMaterialBasic;
+            }
+        }
+        for (var i = 0, len = cockpitMeshes.length; i < len; i++) {
+            var mesh = cockpitMeshes[i];
+
+            if(mesh.material == glassMaterialBasic){   
+                if(currentMaterial == "phong"){
+                    mesh.material = glassMaterialPhong;
+                }else{
+                    mesh.material = glassMaterialLambert;
+                }
+            }else{
+                mesh.material = glassMaterialBasic;
+            }
+        }
+        for (var i = 0, len = backFinsMeshes.length; i < len; i++) {
+            var mesh = backFinsMeshes[i];
+
+            if(mesh.material == accentMaterialBasic){   
+                if(currentMaterial == "phong"){
+                    mesh.material = accentMaterialPhong;
+                }else{
+                    mesh.material = accentMaterialLambert;
+                }
+            }else{
+                mesh.material = accentMaterialBasic;
+            }
+        }
+
         break;
 
     case 71: //G
     case 103: //g
+        
+        for (var i = 0, len = noseMeshes.length; i < len; i++) {
+            var mesh = noseMeshes[i];
+
+            if(mesh.material == accentMaterialLambert){
+                mesh.material = accentMaterialPhong;
+                currentMaterial = "phong";
+            }else{
+                mesh.material = accentMaterialLambert;
+                currentMaterial = "lambert";
+            }
+        }
+        for (var i = 0, len = fuselageMeshes.length; i < len; i++) {
+            var mesh = fuselageMeshes[i];
+
+            if(mesh.material == bodyMaterialLambert)
+                mesh.material = bodyMaterialPhong;
+            else{
+                mesh.material = bodyMaterialLambert;
+            }
+        }
+        for (var i = 0, len = wingMeshes.length; i < len; i++) {
+            var mesh = wingMeshes[i];
+
+            if(mesh.material == accentMaterialLambert)
+                mesh.material = accentMaterialPhong;
+            else{
+                mesh.material = accentMaterialLambert;
+            }
+        }
+        for (var i = 0, len = cockpitMeshes.length; i < len; i++) {
+            var mesh = cockpitMeshes[i];
+
+            if(mesh.material == glassMaterialLambert)
+                mesh.material = glassMaterialPhong;
+            else{
+                mesh.material = glassMaterialLambert;
+            }
+        }
+        for (var i = 0, len = backFinsMeshes.length; i < len; i++) {
+            var mesh = backFinsMeshes[i];
+
+            if(mesh.material == accentMaterialLambert)
+                mesh.material = accentMaterialPhong;
+            else{
+                mesh.material = accentMaterialLambert;
+            }
+        }
 
         break;
 
@@ -859,12 +1057,6 @@ function init() {
     //////////////////// //////////////////////
     ////////////// TESTING //////////////////// 
     //////////////////// ////////////////////// 
-    geometry = new THREE.CubeGeometry(10, 10, 10);
-    material = new THREE.MeshPhongMaterial({ color: 0xff0000, wireframe: false }); 
-    lightTestCube = new THREE.Mesh(geometry, material);
-    lightTestCube.position.set(50, 20, 50);
-    lightTestCube.castShadow = true;
-    scene.add(lightTestCube);
 
     light = new THREE.SpotLight(0xffffff, 1, 2000, 0.25, 0.2);
     light.position.set(150,150,-150);
@@ -889,14 +1081,6 @@ function init() {
     light4.target = plane;
     light4.castShadow = true;
     scene.add(light4);
-
-    // pointLight = new THREE.PointLight(0xffffff, 2.0, 100);
-    // scene.add(pointLight);
-
-    // pointLight.position.set(0, plane.position.y+20, 0);
-
-    // ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    // scene.add(ambientLight);
 
     directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(60, 120, 60);
