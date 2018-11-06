@@ -918,7 +918,7 @@ function init() {
     scene.add(helper);
 
 ////////////////////////////////////////////////
-//////               CONE                 //////
+//////           HOLOFOTE                 //////
 ////////////////////////////////////////////////
 
     geometry = new THREE.ConeGeometry( 5, 10, 32 );
@@ -927,7 +927,6 @@ function init() {
     var cone2 = new THREE.Mesh(geometry, material);
     var cone3 = new THREE.Mesh(geometry, material);
     var cone4 = new THREE.Mesh(geometry, material);
-
 
 
     cone.position.set(-100,100,-100);
@@ -949,13 +948,25 @@ function init() {
     cone4.rotation.z -= Math.PI / 5;
 
 
-
     scene.add(cone);
     scene.add(cone2);
     scene.add(cone3);
     scene.add(cone4);
 
-
+    geometry = new THREE.SphereGeometry( 5, 32, 32 );
+    material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+    var sphere = new THREE.Mesh(geometry, material);
+    var sphere2 = new THREE.Mesh(geometry, material);
+    var sphere3 = new THREE.Mesh(geometry, material);
+    var sphere4 = new THREE.Mesh(geometry, material);
+    sphere.position.set(96, 96, 96);
+    sphere2.position.set(96, 96, -96);
+    sphere3.position.set(-96, 96, 96);
+    sphere4.position.set(-96, 96, -96);
+    scene.add(sphere);
+    scene.add(sphere2);
+    scene.add(sphere3);
+    scene.add(sphere4);
 
 
     renderer.shadowMap.enabled = true;                  
