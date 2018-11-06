@@ -1082,7 +1082,7 @@ function init() {
     light4.castShadow = true;
     scene.add(light4);
 
-    directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight = new THREE.DirectionalLight(0xffffff, 1.1);
     directionalLight.position.set(60, 120, 60);
     directionalLight.target = floor;
     directionalLight.castShadow = true;
