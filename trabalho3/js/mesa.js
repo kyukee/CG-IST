@@ -737,6 +737,10 @@ function createFloor(x, y, z) {
     floor.rotation.x -= Math.PI / 2;
     floor.receiveShadow = true;
     scene.add(floor);
+
+    floor.position.x = x;
+    floor.position.y = y;
+    floor.position.z = z;
 }
 
 
@@ -753,8 +757,6 @@ function createScene() {
 
     createPlane(0, 40, 0);
     createFloor(0, 0, 0);
-
-
 }
 
 
@@ -1058,6 +1060,7 @@ function init() {
     ////////////// TESTING //////////////////// 
     //////////////////// ////////////////////// 
 
+    // color, intensity, distance, angle, penumbra
     light = new THREE.SpotLight(0xffffff, 1, 2000, 0.25, 0.2);
     light.position.set(150,150,-150);
     light.target = plane;
