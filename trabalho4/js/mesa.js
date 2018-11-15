@@ -1,4 +1,4 @@
-/*global THREE, requestAnimationFrame, console*/
+// http-server Development/git/CG-IST/trabalho4 -p 9100
 
 var camera, scene, renderer;
 var cameraTop;
@@ -76,6 +76,25 @@ function createBall(x, y, z) {
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(1, 1);
 
+    // radius, width segments, height segments
+    geometry = new THREE.SphereGeometry(8, 12, 12); 
+
+    // modify UVs to accommodate MatCap texture
+    var faceVertexUvs = geometry.faceVertexUvs[ 0 ];
+    for ( var i = 0; i < faceVertexUvs.length; i ++ ) {
+
+        var uvs = faceVertexUvs[ i ];
+        var face = geometry.faces[ i ];
+
+        for ( var j = 0; j < 3; j ++ ) {
+
+            // transforma coordenadas de [-1, 1] para [0, 1]
+            uvs[j].x = face.vertexNormals[j].x * 0.5 + 0.5 + ((uvs[j].z < 0) ? 1 : 0);
+            uvs[j].y = face.vertexNormals[j].y * 0.5 + 0.5;
+        }
+    }
+
+
     ballMaterialPhong = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         emissive: 0x000000,
@@ -92,8 +111,6 @@ function createBall(x, y, z) {
     })
     basicMats.push(ballMaterialBasic);
 
-    // radius, width segments, height segments
-    geometry = new THREE.SphereGeometry(8, 12, 12); 
     mesh = new THREE.Mesh(geometry, ballMaterialPhong);
     mesh.position.set(x, y, z);
     mesh.castShadow = true;
@@ -198,6 +215,9 @@ function createCamera() {
     camera = cameraTop;
 
     controls = new THREE.OrbitControls( cameraTop );
+    controls.minDistance = 70;
+    controls.maxDistance = 500;
+    controls.enablePan = false;
     controls.update();
 
 }
