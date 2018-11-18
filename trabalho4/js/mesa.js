@@ -557,10 +557,15 @@ function onKeyDown(e) {
 
         break;
 
-    case 79: //O
-    case 111: //o
+    case 83: //S
+    case 115: //s
         orbit = !orbit;
         break;
+
+    case 82: //R
+        case 114: //r
+            controls.reset();
+            break;
     }
 }
 
