@@ -1,7 +1,7 @@
 // http-server Development/git/CG-IST/trabalho4 -p 9100
 
 var camera, scene, renderer;
-var cameraTop;
+var cameraTop, cameraPause;
 
 var geometry, material, mesh, texture, bumpTexture;
 var meshes = [], basicMats = [], phongMats = [];
@@ -427,7 +427,12 @@ function createCamera() {
     cameraTop.position.set(-40,30,60);
     cameraTop.lookAt(new THREE.Vector3(0,0,0));
 
+    cameraPause = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
+    cameraPause.position.set(0,50,0);
+    cameraPause.lookAt(new THREE.Vector3(0,0,0));
+
     camera = cameraTop;
+
 
     controls = new THREE.OrbitControls( cameraTop );
     controls.minDistance = 70;
@@ -560,6 +565,13 @@ function onKeyDown(e) {
     case 83: //S
     case 115: //s
         orbit = !orbit;
+        table.texture = new THREE.TextureLoader().load("img/Paused.png");
+        if(!orbit){
+        camera = cameraPause;
+        }
+        if(orbit){
+        camera = cameraTop;
+        }
         break;
 
     case 82: //R
