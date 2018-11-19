@@ -11,8 +11,10 @@ var controls;
 var table, tableMaterialPhong, tableMaterialBasic;
 var ball, ballMaterialPhong, ballMaterialBasic;
 var cube, cubeMaterialPhong, cubeMaterialBasic;
+var pauseSign;
 var currentMaterial = " ";
-var orbit = true;
+var orbit = false;
+var pause = false;
 
 var directionalLight, spotlight;
 
@@ -50,8 +52,7 @@ function createTable(x, y, z) {
     // width, height, depth
     geometry = new THREE.CubeGeometry(100, 1, 100); 
     mesh = new THREE.Mesh(geometry, tableMaterialPhong);
-    mesh.position.set(x, y, z);
-    table.receiveShadow = true;
+    mesh.receiveShadow = true;
     meshes.push(mesh);
     table.add(mesh);
     scene.add(table);
@@ -70,6 +71,8 @@ function createBall(x, y, z) {
     'use strict';
     
     ball = new THREE.Object3D();
+
+    ball.userData = { v: 0, acc: 0, maxSpeed: 7, accelaration: 2, attrition: 0.04};
 
     texture = new THREE.TextureLoader().load("img/ball.png");
     texture.wrapS = THREE.RepeatWrapping;
@@ -111,13 +114,14 @@ function createBall(x, y, z) {
     basicMats.push(ballMaterialBasic);
 
     mesh = new THREE.Mesh(geometry, ballMaterialPhong);
-    mesh.position.set(x, y, z);
     mesh.castShadow = true;
     meshes.push(mesh);
     ball.add(mesh);
     ball.castShadow = true;
     scene.add(ball);
-    
+
+    ball.rotation.y = 0;
+
     ball.position.x = x;
     ball.position.y = y;
     ball.position.z = z;
@@ -380,7 +384,7 @@ function createCube(x, y, z) {
     basicMats.push(cubeMaterialBasic);
 
     mesh = new THREE.Mesh(geometry, cubeMaterialPhong);
-    mesh.position.set(x, y, z);
+    // mesh.position.set(x, y, z);
     mesh.castShadow = true;
     meshes.push(mesh);
     cube.add(mesh);
@@ -390,6 +394,45 @@ function createCube(x, y, z) {
     cube.position.x = x;
     cube.position.y = y;
     cube.position.z = z;
+}
+
+
+////////////////////////////////////////////////
+//////           PAUSE SIGN               //////
+////////////////////////////////////////////////
+
+function createPauseSign(x, y, z) {
+    'use strict';
+    
+    pauseSign = new THREE.Object3D();
+
+    texture = new THREE.TextureLoader().load("img/Paused.png");
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, 1);
+
+    var pauseSignMaterialBasic = new THREE.MeshBasicMaterial({
+        color: 0xffffff, 
+        opacity: 1, 
+        wireframe: false,
+        map: texture
+    })
+
+    var camFactor = 14;
+    var width = (window.innerWidth / camFactor) * 2;
+    var height = (window.innerHeight / camFactor) * 2;
+
+    // width, height, depth
+    geometry = new THREE.CubeGeometry(width, height, 1); 
+    mesh = new THREE.Mesh(geometry, pauseSignMaterialBasic);
+    pauseSign.add(mesh);
+    scene.add(pauseSign);
+
+    pauseSign.visible = false;
+    
+    pauseSign.position.x = x;
+    pauseSign.position.y = y;
+    pauseSign.position.z = z;
 }
 
 
@@ -406,11 +449,12 @@ function createScene() {
     scene.background = new THREE.Color( 0xcccccc );
     
 
-    scene.add(new THREE.AxisHelper(10));
+    scene.add(new THREE.AxisHelper(30));
     
     createTable(0, -2, 0);
-    createBall(10, 8, 5);
-    createCube(-5, 6, -10);
+    createBall(25, 7, 15);
+    createCube(0, 6.5, 0);
+    createPauseSign(0, 0, 60);
 }
 
 
@@ -428,18 +472,16 @@ function createCamera() {
     cameraTop.lookAt(new THREE.Vector3(0,0,0));
 
     cameraPause = new THREE.OrthographicCamera( window.innerWidth / - camFactor, window.innerWidth / camFactor, window.innerHeight / camFactor, window.innerHeight / - camFactor, 1, 1000 );
-    cameraPause.position.set(0,50,0);
+    cameraPause.position.set(0,0,200);
     cameraPause.lookAt(new THREE.Vector3(0,0,0));
 
     camera = cameraTop;
-
 
     controls = new THREE.OrbitControls( cameraTop );
     controls.minDistance = 70;
     controls.maxDistance = 500;
     controls.enablePan = false;
     controls.update();
-
 }
 
 
@@ -456,7 +498,6 @@ function createLights() {
     directionalLight.target = table;
     directionalLight.castShadow = true;
     directionalLight.shadowDarkness = 0.5;
-    directionalLight.visible = false;
     scene.add(directionalLight);
 
     directionalLight.shadow.mapSize.width = 512;
@@ -468,11 +509,15 @@ function createLights() {
     directionalLight.shadowCameraTop = 60;
     directionalLight.shadowCameraBottom = -60;
 
+    // var helper = new THREE.CameraHelper(directionalLight.shadow.camera);
+    // scene.add(helper);
+
     // color, intensity, distance, angle, penumbra
     spotlight = new THREE.SpotLight(0xffffff, 1.5, 2000, 0.25, 1);
     spotlight.position.set(-80,140,-30);
     spotlight.target = table;
     spotlight.castShadow = true;
+    spotlight.visible = false;
     scene.add(spotlight);
 
     renderer.shadowMap.enabled = true;                  
@@ -508,98 +553,110 @@ function onKeyDown(e) {
     switch (e.keyCode) {
     case 68: //D
     case 100: //d
-        if(directionalLight.visible) {
-            directionalLight.visible = false;
-        } else {
-            directionalLight.visible = true;
+        if (!pause){
+            if(directionalLight.visible) {
+                directionalLight.visible = false;
+            } else {
+                directionalLight.visible = true;
+            }
         }
-
         break;
     case 80: //P
     case 112: //p
-        if(spotlight.visible) {
-            spotlight.visible = false;
-        } else {
-            spotlight.visible = true;
+        if (!pause){
+            if(spotlight.visible) {
+                spotlight.visible = false;
+            } else {
+                spotlight.visible = true;
+            }
         }
         break;
 
     case 76: //L
     case 108: //l
 
-        if (currentMaterial == "basic") {
+        if (!pause){
+            if (currentMaterial == "basic") {
 
-            // passar tudo para phong
-            for (var i = 0, len = meshes.length; i < len; i++) {
-                var mesh = meshes[i];
-                var phong = phongMats[i];
-                mesh.material = phong;
+                // passar tudo para phong
+                for (var i = 0, len = meshes.length; i < len; i++) {
+                    var mesh = meshes[i];
+                    var phong = phongMats[i];
+                    mesh.material = phong;
+                }
                 currentMaterial = "phong";
-            }
-        }else{
-            // passar tudo para basic
-            for (var i = 0, len = meshes.length; i < len; i++) {
+            }else{
+                // passar tudo para basic
+                for (var i = 0, len = meshes.length; i < len; i++) {
 
-                var mesh = meshes[i];
-                var basic = basicMats[i];
-                mesh.material = basic;
+                    var mesh = meshes[i];
+                    var basic = basicMats[i];
+                    mesh.material = basic;
+                }
                 currentMaterial = "basic";
             }
         }
-
         break;
 
     case 87: //W
     case 119: //w
 
-        for (var i = 0, len = meshes.length; i < len; i++) {
+        if (!pause){
+            for (var i = 0, len = meshes.length; i < len; i++) {
 
-            var basic = basicMats[i];
-            var phong = phongMats[i];
-            basic.wireframe = !basic.wireframe;
-            phong.wireframe = !phong.wireframe;
+                var basic = basicMats[i];
+                var phong = phongMats[i];
+                basic.wireframe = !basic.wireframe;
+                phong.wireframe = !phong.wireframe;
+            }
         }
-
         break;
 
     case 83: //S
     case 115: //s
-        orbit = !orbit;
-        table.texture = new THREE.TextureLoader().load("img/Paused.png");
-        if(!orbit){
-        camera = cameraPause;
+
+        if (!pause) {
+            pause = true;
+            controls.enabled = false;
+            pauseSign.visible = true;
+
+            camera = cameraPause;
+
+            // var azAngle = controls.getAzimuthalAngle();
+            // pauseSign.rotation.y = azAngle;
+
+
+        } else {
+            pause = false;
+            pauseSign.visible = false;
+            controls.enabled = true;
+            camera = cameraTop;
         }
-        if(orbit){
-        camera = cameraTop;
+        break;
+
+    case 66: //B
+    case 98: //b
+
+        if (!pause){
+            orbit = !orbit;
+    
+            if (ball.userData.acc != 0) {
+                ball.userData.acc = 0;
+            }
+            else{
+                ball.userData.acc = ball.userData.accelaration;
+            }
         }
         break;
 
     case 82: //R
         case 114: //r
-            controls.reset();
+
+            if (pause)
+                resetVars();
             break;
     }
 }
-
-function onKeyUp(e) {
-    'use strict';
-    
-    switch (e.keyCode) {
-    case 37: //left arrow
-        chair.userData.rotateLeft = false;
-        break;
-    case 38: //up arrow
-        chair.userData.accFront = 0;
-        break;
-    case 39: //right arrow
-        chair.userData.rotateRight = false;
-        break;
-    case 40: //down arrow
-        chair.userData.accBack = 0;
-        break;
-    }
-}
-
 function render() {
     'use strict';
     renderer.render(scene, camera);
@@ -622,7 +679,6 @@ function init() {
     render();
     
     window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
 }
 
@@ -631,15 +687,72 @@ function animate() {
 
     controls.update();
 
-    if (orbit) {
-        var x = camera.position.x, z = camera.position.z;
-        var rotSpeed = 0.002;
 
-        camera.position.x = x * Math.cos(rotSpeed) + z * Math.sin(rotSpeed);
-        camera.position.z = z * Math.cos(rotSpeed) - x * Math.sin(rotSpeed);
+    var timeElapsed = clock.getDelta();
+
+    if (!pause) {
+        if(Math.abs(ball.userData.v) < ball.userData.maxSpeed && ball.userData.acc != 0){
+            ball.userData.v += ball.userData.acc * timeElapsed / 2;
+        }
+        
+        if(Math.abs(ball.userData.v) > 0 && ball.userData.acc == 0){        
+
+            ball.userData.v -= ball.userData.attrition;
+
+            if (ball.userData.v < 0){
+                ball.userData.v = 0;
+            }        
+        }
+
+        var movement = (ball.userData.v * timeElapsed);
+
+
+        var rollSpeed = movement;
+        var x = ball.position.x, z = ball.position.z;
+
+        ball.rotateY(2.0 * movement);
+
+        ball.position.x = (x * Math.cos(rollSpeed) + z * Math.sin(rollSpeed));
+        ball.position.z = (z * Math.cos(rollSpeed) - x * Math.sin(rollSpeed));
+
+        // ball.rotateX( -((z - ball.position.z) / Math.PI) );
+        // ball.rotateZ( ((x - ball.position.x) / Math.PI) );
     }
+
 
     render();
     requestAnimationFrame(animate);
 }
 
+function resetVars() {
+    camera = cameraTop;
+    controls.reset();
+    orbit = false;
+    pause = false;
+    directionalLight.visible = true;
+    spotlight.visible = false;
+    pauseSign.visible = false;
+    controls.enabled = true;
+
+    for (var i = 0, len = meshes.length; i < len; i++) {
+        var mesh = meshes[i];
+        var phong = phongMats[i];
+        mesh.material = phong;
+    }
+    currentMaterial = "phong";
+
+    ball.userData = { v: 0, acc: 0, maxSpeed: 7, accelaration: 2, attrition: 0.04};
+
+    for (var i = 0, len = meshes.length; i < len; i++) {
+        var basic = basicMats[i];
+        var phong = phongMats[i];
+        basic.wireframe = false;
+        phong.wireframe = false;
+    }
+
+    ball.position.x = 25;
+    ball.position.y = 7;
+    ball.position.z = 15;
+
+    ball.rotation.y = 0;
+}
